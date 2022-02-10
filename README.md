@@ -66,7 +66,6 @@
         <li><a href="#back-end">Back end</a></li>
         <li><a href="#base-de-datos">Base de datos</a></li>
         <li><a href="#images-readme"> images-readme</a></li>
-         
       </ul>
     </li>
   </ol>
