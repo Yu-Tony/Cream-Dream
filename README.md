@@ -65,6 +65,8 @@
         <li><a href="#front-end">Front End</a></li>
         <li><a href="#back-end">Back end</a></li>
         <li><a href="#base-de-datos">Base de datos</a></li>
+        <li><a href="#images-readme"> images-readme</a></li>
+         
       </ul>
     </li>
   </ol>
@@ -131,6 +133,8 @@ This is an example of how to list things you need to use the software and how to
 ### Back End
 ### Front End
 ### Base de datos
+### images-readme
+  <ul> Carpeta para añadir el logo y screenshots al apartado de Read Me</ul>
 <!-- INTEGRANTES -->
 ## Integrantes
 
