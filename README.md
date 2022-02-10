@@ -54,7 +54,7 @@
     <li>
       <a href="#comenzar-con-el-proyecto">Comenzar con el proyecto</a>
       <ul>
-        <li><a href="#prerequisitos">Prerequisitos</a></li>
+        <li><a href="#prerrequisitos">Prerrequisitos</a></li>
         <li><a href="#instalación">Instalación</a></li>
       </ul>
     </li>
@@ -99,7 +99,7 @@ Nuestro proyecto es una página web sobre una repostería que está enfocada en 
 This is an example of how you may give instructions on setting up your project locally.
 To get a local copy up and running follow these simple example steps.
 
-### Prerequisitos
+### Prerrequisitos
 
 This is an example of how to list things you need to use the software and how to install them.
 * npm
