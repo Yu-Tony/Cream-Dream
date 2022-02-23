@@ -1,25 +1,25 @@
 const mongoose = require('mongoose');
 
 const PedidoSchema = new mongoose.Schema({
-    Comida: 
+    comida: 
     [
         { 
             type: mongoose.Types.ObjectId, ref: 'comida'
           
         }
     ],
-    Combo:
+    combo:
     [
         { 
             type: mongoose.Types.ObjectId, ref: 'combo' 
         }
     ],
-    Mesa:
+    mesa:
     {
         type: mongoose.Types.ObjectId, ref: 'mesa', 
         required: true
     }, 
-    Subtotal:
+    subtotal:
     {
         type: Number,
         required: true

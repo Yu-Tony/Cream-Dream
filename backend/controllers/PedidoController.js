@@ -24,7 +24,7 @@ exports.pedido_update = async(req, res) =>
             .then((newObject) => console.log("Se creó correctamente el pedido", newObject))
             .catch((err) =>
             {
-                console.error("No se pudo crear correctamente", err);
+                console.error("No se pudo crear correctamente el pedido", err);
                 res.send(err.errors);
             });
     
