@@ -1,17 +1,23 @@
 const mongoose = require('mongoose');
 
-const ResenaSchema = new mongoose.Schema ({
-    calificacion:{
+const ResenaSchema = new mongoose.Schema({
+    calificacion: {
         type: Number
     },
     descripcion: {
         type: String
     },
-    tipo:{
+    tipo: {
         type: Boolean
     },
-    idTipo:{
-        type: mongoose.Schema.Types.ObjectId
+    idTipo: {
+        type: mongoose.Schema.Types.ObjectId,
+        refPath: 'onModel'
+    },
+    onModel: {
+        type: String,
+        required: true,
+        enum: ['sucursal', 'empleado']
     }
 })
 
