@@ -13,7 +13,7 @@ exports.reservacion_create = async (req, res) => {
             res.send(err.errors);
         });
 
-    res.send(newSchool); 
+    res.send(newReservacion); 
 };
 
 
