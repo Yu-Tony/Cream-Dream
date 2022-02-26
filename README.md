@@ -46,29 +46,33 @@
   <ol>
      <li><a href="#sobre-cream-dream">Sobre Cream Dream</a></li>
     <li>
-      <a href="#sobre-el-proyecto">Sobre el proyecto</a>
-      <ul>
-        <li><a href="#construido-con">Construido con</a></li>
-      </ul>
-    </li>
-    <li>
       <a href="#comenzar-con-el-proyecto">Comenzar con el proyecto</a>
       <ul>
         <li><a href="#prerrequisitos">Prerrequisitos</a></li>
-        <li><a href="#instalación">Instalación</a></li>
       </ul>
     </li>
-    <li><a href="#integrantes">Integrantes</a></li>
     <li>
       <a href="#carpetas-del-proyecto">Carpetas del proyecto</a>
       <ul>
-        <li><a href="#front-end">Front End</a></li>
-        <li><a href="#back-end">Back end</a></li>
-        <li><a href="#base-de-datos">Base de datos</a></li>
+        <li><a href="#controllers">controllers</a></li>
+        <li><a href="#models">models</a></li>
+        <li><a href="#route">routes</a></li>
         <li><a href="#images-readme"> images-readme</a></li>
       </ul>
     </li>
+  <li>
+      <a href="#ramas-del-proyecto">Ramas del proyecto</a>
+      <ul>
+        <li><a href="#main">Main</a></li>
+        <li><a href="#develop">Develop</a></li>
+        <li><a href="#release">Release</a></li>
+        <li><a href="#hotfix">Hotfix</a></li>
+        <li><a href="#otras">Otras</a></li>
+      </ul>
+    </li>
+   <li><a href="#integrantes">Integrantes</a></li>
   </ol>
+  
 
 <!-- SOBRE CREAM DREAM -->
 ## Sobre Cream Dream
@@ -79,49 +83,26 @@ Por eso te ayudamos a endulzar tus momentos con nuestros deliciosos postres y nu
 <!-- ABOUT THE PROJECT -->
 ## Sobre el proyecto
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-Nuestro proyecto es una página web sobre una repostería que está enfocada en que el cliente tenga un rápido servicio. En nuestra página web puedes registrarte o iniciar sesión y realizar una reservaciónpara ir a comer, o puedes ir directamente a las tiendas físicas. En las mesas de nuestra locación puedes encontrar códigos QR los cuales tienen el menú de Cream Dream. Y dentro de la página realizas tur ordenes. 
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-### Construido con
-* [React.js](https://reactjs.org/)
-
+Nuestro proyecto es una página web sobre una repostería que está enfocada en que el cliente tenga un rápido servicio. En nuestra página web puedes registrarte o iniciar sesión y realizar una reservaciónpara ir a comer, o puedes ir directamente a las tiendas físicas. En las mesas de nuestra locación puedes encontrar códigos QR los cuales tienen el menú de Cream Dream. Y dentro de la página realizas tus ordenes. 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
 
 
 <!-- GETTING STARTED -->
 ## Comenzar con el proyecto
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+Para correr este proyecto se necesita:
 
 ### Prerrequisitos
 
-This is an example of how to list things you need to use the software and how to install them.
+Instalar npm
 * npm
   ```sh
   npm install npm@latest -g
   ```
 
-### Instalación
-
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/github_username/repo_name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -129,12 +110,45 @@ This is an example of how to list things you need to use the software and how to
 
 <!-- CARPETAS -->
 ## Carpetas del proyecto
-### Back End
-### Front End
-### Base de datos
+### Controllers
+ <ul>Controladores, definen las funcionalidades que se realizan en la base de datos.</ul>
+
+### Models
+ <ul> Modelos, la definición y estructura de las colecciones.</ul>
+
+### Route
+ <ul> Donde se definen los end-points</ul>
+
 ### images-readme
   <ul> Carpeta para añadir el logo y screenshots al apartado de Read Me</ul>
+  
+  <!-- RAMAS -->
+## Ramas del proyecto
+### Main
+ <ul>Rama de la producción</ul>
+
+### Develop
+ <ul> Rama dirigida a los desarrolladores
+  
+  ```diff
+- (descargar esta)
+
+```
+  
+  </ul>
+
+### Release
+  <ul> Version funcional estable</ul>
+  
+### Hotfix
+  <ul> Mantenimiento</ul>
+  
+### Otras
+  <ul> Funcionalidades y/o del proyecto</ul>
+  
+  
 <!-- INTEGRANTES -->
+
 ## Integrantes
 
 * []() Eduardo Sebastián Granados Castillo. 1851872
