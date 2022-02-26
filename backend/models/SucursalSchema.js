@@ -1,38 +1,32 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const SucursalSchema = new mongoose.Schema({
-    nombre:
+  nombre: {
+    type: String,
+    required: true,
+  },
+  direccion: {
+    type: String,
+    required: true,
+  },
+  telefono: {
+    type: String,
+  },
+  imagen: [
     {
-        Type: String,
-        required: true
+      data: Buffer,
+      contentType: String,
     },
-    direccion: 
+  ],
+  calificacion: [
     {
-        Type: String,
-        required: true
+      type: Object,
     },
-    telefono:
-    {
-        Type: String
-    },
-    imagen:
-    [ 
-        {
-            data: Buffer,
-            contentType: String
-        }
-    ],
-    calificacion:
-    [
-        {
-            Type: Object
-        }
-    ], 
-    baja:
-    {
-        Type: Boolean,
-        default: 0
-    }
+  ],
+  baja: {
+    type: Boolean,
+    default: 0,
+  },
 });
 
 const Sucursal = mongoose.model("sucursal", SucursalSchema);
