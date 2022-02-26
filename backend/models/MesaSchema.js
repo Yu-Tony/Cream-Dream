@@ -11,11 +11,11 @@ const mesaSchema = new mongoose.Schema({
     required: true,
     default: true,
   },
-  _empleado: {
+  empleado: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "empleado",
   },
-  _sucursal: {
+  sucursal: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "sucursal",
   },
