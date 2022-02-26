@@ -1,4 +1,5 @@
 const Comida = require("../models/ComidaSchema");
+const CONST = require("../constants");
 
 exports.comida_create = async (req, res) => {
   const { body } = req;
@@ -8,12 +9,21 @@ exports.comida_create = async (req, res) => {
   await newComida
     .save()
     .then((newObject) => {
-      console.log("Success", newObject);
-      res.send("ok");
+      console.log(CONST.created_success, newObject);
+
+      res.send({
+        success: true,
+        message: `${newObject.nombre} ${CONST.created_success}`,
+        data: newObject,
+      });
     })
     .catch((err) => {
-      console.error("error-comida_create", err);
-      res.send("error");
+      console.error(`${CONST.error} - comida_create`, err);
+
+      res.send({
+        success: false,
+        message: `${CONST.error} - comida_create, ${err}`,
+      });
     });
 };
 
@@ -25,32 +35,73 @@ exports.comida_update = async (req, res) => {
     const comidadb = await Comida.findById(id);
 
     if (comidadb) {
-      //res.send(comidadb);
+      //FOUNDED
       const updated = await Comida.findByIdAndUpdate(id, body, {
         returnOriginal: false,
       });
-      res.send({ message: "Updated" });
+
+      console.log(`${updated.nombre} ${CONST.updated_success}`);
+      res.send({
+        success: true,
+        message: `${updated.nombre} ${CONST.updated_success}`,
+        data: updated,
+      });
     } else {
-      res.send({ message: "error-comida_update not-found" });
+      //NOT FOUND
+      console.log(`${CONST.error} - comida_update ${CONST.not_found}`);
+      res.send({
+        success: false,
+        message: `${CONST.error} - comida_update ${CONST.not_found}`,
+      });
     }
   } catch (err) {
-    res.send(err);
+    //ID NOT VALID
+    console.log(`${CONST.error} - comida_update ${err.message}`);
+
+    res.send({
+      success: false,
+      message: err,
+    });
   }
 };
 
 exports.comida_getall_menu = async (req, res) => {
   const data = await Comida.find();
-  res.send(data);
+
+  console.log(`comida_getall_menu - ${CONST.data_found}`);
+  res.send({
+    success: true,
+    message: `comidas ${CONST.data_found}`,
+    data,
+  });
 };
 
 exports.comida_getById = async (req, res) => {
   const { id } = req.params;
-  const comidadb = await Comida.findById(id);
 
-  if (comidadb) {
-    res.send(comidadb);
-  } else {
-    res.send({ message: "error-comida_getById not-found" });
+  try {
+    const comidadb = await Comida.findById(id);
+    if (comidadb) {
+      console.log(`comida_getById - ${CONST.data_found}`);
+
+      res.send({
+        success: true,
+        data: comidadb,
+      });
+    } else {
+      console.log(`comida_getById - ${CONST.not_found}`);
+      res.send({
+        success: false,
+        message: `comidas ${CONST.not_found}`,
+      });
+    }
+  } catch (err) {
+    console.log(`${CONST.error} - comida_getById ${err.message}`);
+
+    res.send({
+      success: false,
+      message: err,
+    });
   }
 };
 
@@ -72,9 +123,17 @@ exports.comida_getByQuery = async (req, res) => {
     comidadb = await Comida.find({ categoria: query });
   }
 
-  if (comidadb) {
-    res.send(comidadb);
+  if (comidadb && comidadb.length > 0) {
+    console.log(`comida_getByQuery - ${CONST.data_found}`);
+    res.send({
+      success: true,
+      data: comidadb,
+    });
   } else {
-    res.send({ message: "error-comida_getByName not-found" });
+    console.log(`comida_getByQuery("${n ? n : c}") - ${CONST.not_found}`);
+    res.send({
+      success: false,
+      message: `comida_getByQuery("${n ? n : c}") ${CONST.not_found}`,
+    });
   }
 };

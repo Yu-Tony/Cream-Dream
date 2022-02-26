@@ -1,5 +1,5 @@
 exports.error = "error";
-exports.data_founds = "data found";
+exports.data_found = "data found";
 exports.not_found = "not found";
 exports.updated_success = "updated successfully";
 exports.created_success = "created successfully";
