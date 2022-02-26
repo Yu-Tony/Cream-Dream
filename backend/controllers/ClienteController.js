@@ -1,4 +1,5 @@
 const Cliente = require("../models/ClienteSchema");
+const CONST = require("../constants");
 
 exports.cliente_signin = async (req, res) => {
   const { body } = req;
@@ -8,12 +9,21 @@ exports.cliente_signin = async (req, res) => {
   await newCliente
     .save()
     .then((newObject) => {
-      console.log("Success", newObject);
-      res.send({ message: "sign up successfully" });
+      console.log(`cliente ${newObject.nombre} ${CONST.singup}`);
+      res.send({
+        success: true,
+        message: `${CONST.singup}`,
+      });
     })
     .catch((err) => {
-      console.error("error-cliente_signin");
-      res.send({ message: "error" });
+      console.error(
+        `${CONST.error.toUpperCase()}: cliente_signin ${err.message}`
+      );
+      res.send({
+        success: false,
+        message: err.message,
+        error_code: err.code,
+      });
     });
 };
 
@@ -22,9 +32,17 @@ exports.cliente_login = async (req, res) => {
   const clientedb = await Cliente.findOne({ correo, contraseña });
 
   if (clientedb) {
-    res.send({ message: "login" });
+    console.log(`cliente ${correo} ${CONST.login}`);
+    res.send({
+      success: true,
+      message: CONST.login,
+    });
   } else {
-    res.send({ message: "Invalid credentials" });
+    console.log(`cliente ${correo} ${CONST.invalid_cred}`);
+    res.send({
+      success: false,
+      message: CONST.invalid_cred,
+    });
   }
 };
 
@@ -38,22 +56,57 @@ exports.cliente_update = async (req, res) => {
     if (clientedb) {
       const updated = await Cliente.findByIdAndUpdate(id, { contraseña });
 
-      res.send({ message: "Updated" });
+      console.log(`cliente ${clientedb.nombre} ${CONST.updated_success}`);
+      res.send({
+        success: true,
+        message: `cliente ${CONST.updated_success}`,
+      });
     } else {
-      res.send({ message: "cliente_update not found" });
+      console.log(`${CONST.not_found.toUpperCase()}: in cliente_update`);
+      res.send({
+        success: false,
+        message: `cliente ${CONST.not_found}`,
+      });
     }
   } catch (err) {
-    res.send(err);
+    console.log(
+      `${CONST.error.toUpperCase()}: ${err.message} in cliente_update`
+    );
+    res.send({
+      success: false,
+      message: err.message,
+    });
   }
 };
 
 exports.cliente_delete = async (req, res) => {
   const { id } = req.params;
 
-  await Cliente.findByIdAndDelete(id)
-    .then(() => res.send({ message: "Deleted" }))
-    .catch((err) => {
-      console.error("error-cliente_delete");
-      res.send({ message: err });
+  try {
+    const clientedb = await Cliente.findById(id);
+
+    if (clientedb) {
+      await Cliente.findByIdAndDelete(id);
+
+      console.log(`${clientedb.nombre} ${CONST.deleted_success}`);
+      res.send({
+        success: true,
+        message: `cliente ${CONST.deleted_success}`,
+      });
+    } else {
+      console.error(`${CONST.not_found.toUpperCase()}: in cliente_delete`);
+      res.send({
+        success: false,
+        message: `cliente ${CONST.not_found}`,
+      });
+    }
+  } catch (err) {
+    console.error(
+      `${CONST.error.toUpperCase()}: ${err.message} in cliente_delete`
+    );
+    res.send({
+      success: false,
+      message: err.message,
     });
+  }
 };

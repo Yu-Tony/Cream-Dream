@@ -18,11 +18,11 @@ exports.comida_create = async (req, res) => {
       });
     })
     .catch((err) => {
-      console.error(`${CONST.error} - comida_create`, err);
+      console.error(`${CONST.error.toUpperCase()}: in comida_create`, err);
 
       res.send({
         success: false,
-        message: `${CONST.error} - comida_create, ${err}`,
+        message: `${CONST.error} ${err}`,
       });
     });
 };
@@ -48,15 +48,15 @@ exports.comida_update = async (req, res) => {
       });
     } else {
       //NOT FOUND
-      console.log(`${CONST.error} - comida_update ${CONST.not_found}`);
+      console.log(`${CONST.not_found.toUpperCase()}: in comida_update`);
       res.send({
         success: false,
-        message: `${CONST.error} - comida_update ${CONST.not_found}`,
+        message: `comida ${CONST.not_found}`,
       });
     }
   } catch (err) {
     //ID NOT VALID
-    console.log(`${CONST.error} - comida_update ${err.message}`);
+    console.log(`${CONST.error.toUpperCase()} ${err.message} in comida_update`);
 
     res.send({
       success: false,
@@ -89,14 +89,16 @@ exports.comida_getById = async (req, res) => {
         data: comidadb,
       });
     } else {
-      console.log(`comida_getById - ${CONST.not_found}`);
+      console.log(`${CONST.not_found.toUpperCase()}: in comida_getById`);
       res.send({
         success: false,
         message: `comidas ${CONST.not_found}`,
       });
     }
   } catch (err) {
-    console.log(`${CONST.error} - comida_getById ${err.message}`);
+    console.log(
+      `${CONST.error.toUpperCase()}: ${err.message} in comida_getById `
+    );
 
     res.send({
       success: false,
@@ -130,7 +132,9 @@ exports.comida_getByQuery = async (req, res) => {
       data: comidadb,
     });
   } else {
-    console.log(`comida_getByQuery("${n ? n : c}") - ${CONST.not_found}`);
+    console.log(
+      `${CONST.not_found.toUpperCase()}: comida_getByQuery("${n ? n : c}")`
+    );
     res.send({
       success: false,
       message: `comida_getByQuery("${n ? n : c}") ${CONST.not_found}`,
