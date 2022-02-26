@@ -1,28 +1,24 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const ComboSchema = new mongoose.Schema({
-    nombre:
+  nombre: {
+    type: String,
+    required: true,
+  },
+  descripcion: {
+    type: String,
+    required: true,
+  },
+  comida: [
     {
-        Type: String,
-        required: true
+      type: mongoose.Types.ObjectId,
+      ref: "comida",
     },
-    descripcion: 
-    {
-        Type: String,
-        required: true
-    },
-    comida: 
-    [
-        { 
-            type: mongoose.Types.ObjectId, ref: 'comida'
-          
-        }
-    ],
-    precio:
-    {
-        type: Number,
-        required: true
-    }
+  ],
+  precio: {
+    type: Number,
+    required: true,
+  },
 });
 
 const Combo = mongoose.model("combo", ComboSchema);
