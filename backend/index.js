@@ -11,6 +11,7 @@ const sucursal_router = require("./routes/SucursalRoutes");
 const resena_router = require("./routes/ResenaRoutes");
 const promo_router = require("./routes/PromocionRoutes");
 const empleado_router = require("./routes/EmpleadoRoutes");
+const mesa_router = require("./routes/MesaRoutes");
 
 app.use(bodyParser.json());
 
@@ -20,6 +21,7 @@ app.use("/api", sucursal_router);
 app.use("/api", resena_router);
 app.use("/api", promo_router);
 app.use("/api", empleado_router);
+app.use("/api", mesa_router);
 
 app.listen(port, () => {
   console.log("La aplicación está escuchando al puerto " + port);
