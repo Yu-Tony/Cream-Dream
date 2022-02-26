@@ -1,7 +1,7 @@
-exports.error = "Error";
-exports.data_founds = "Data found";
-exports.not_found = "Not found";
-exports.updated_success = "Updated successfully";
-exports.created_success = "Created successfully";
-exports.deleted_success = "Deleted successfully";
-exports.request_submitted = "Request submitted successfully";
+exports.error = "error";
+exports.data_founds = "data found";
+exports.not_found = "not found";
+exports.updated_success = "updated successfully";
+exports.created_success = "created successfully";
+exports.deleted_success = "deleted successfully";
+exports.request_submitted = "request submitted successfully";
