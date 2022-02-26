@@ -1,3 +1,4 @@
+const error = "Error";
 const data_founds = "Data found";
 const not_found = "Not found";
 const updated_success = "Updated successfully";
