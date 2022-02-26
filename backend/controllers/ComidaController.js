@@ -18,11 +18,13 @@ exports.comida_create = async (req, res) => {
       });
     })
     .catch((err) => {
-      console.error(`${CONST.error.toUpperCase()}: in comida_create`, err);
+      console.error(
+        `${CONST.error.toUpperCase()}: ${err.message} in comida_create`
+      );
 
       res.send({
         success: false,
-        message: `${CONST.error} ${err}`,
+        message: err.message,
       });
     });
 };
@@ -60,7 +62,7 @@ exports.comida_update = async (req, res) => {
 
     res.send({
       success: false,
-      message: err,
+      message: err.message,
     });
   }
 };
@@ -68,7 +70,7 @@ exports.comida_update = async (req, res) => {
 exports.comida_getall_menu = async (req, res) => {
   const data = await Comida.find();
 
-  console.log(`comida_getall_menu - ${CONST.data_found}`);
+  console.log(`${CONST.data_found.toUpperCase()} comida_getall_menu`);
   res.send({
     success: true,
     message: `comidas ${CONST.data_found}`,
@@ -82,7 +84,7 @@ exports.comida_getById = async (req, res) => {
   try {
     const comidadb = await Comida.findById(id);
     if (comidadb) {
-      console.log(`comida_getById - ${CONST.data_found}`);
+      console.log(`${CONST.data_found.toUpperCase()} comida_getById`);
 
       res.send({
         success: true,
@@ -102,7 +104,7 @@ exports.comida_getById = async (req, res) => {
 
     res.send({
       success: false,
-      message: err,
+      message: err.message,
     });
   }
 };
@@ -126,7 +128,7 @@ exports.comida_getByQuery = async (req, res) => {
   }
 
   if (comidadb && comidadb.length > 0) {
-    console.log(`comida_getByQuery - ${CONST.data_found}`);
+    console.log(`${CONST.data_found.toUpperCase()} comida_getByQuery`);
     res.send({
       success: true,
       data: comidadb,
