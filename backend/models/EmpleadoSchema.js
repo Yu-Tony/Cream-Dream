@@ -1,39 +1,38 @@
 const mongoose = require("mongoose");
 
 const EmpleadoSchema = new mongoose.Schema({
-    Nombre:{
-        type:String,
-        required:true
-    },
-    Apellido:{
-        type:String,
-        required:true
-    },
-    Calificacion:{
-        type:[mongoose.Schema.Types.ObjectId]
-    },
-    Sucursal:{
-        type:mongoose.Schema.Types.ObjectId
-    },
-    Correo:{
-        type:String,
-        required:true,
-        unique:true
-    },
-    Contraseña:{
-        type:String,
-        required:true
-    },
-    Baja:{
-        type:Boolean,
-        default:0
-    },
-    Admin:{
-        type:Boolean,
-        default:0        
-    }
-
+  nombre: {
+    type: String,
+    required: true,
+  },
+  apellido: {
+    type: String,
+    required: true,
+  },
+  calificacion: {
+    type: [mongoose.Schema.Types.ObjectId],
+  },
+  sucursal: {
+    type: mongoose.Schema.Types.ObjectId,
+  },
+  correo: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  contrasena: {
+    type: String,
+    required: true,
+  },
+  baja: {
+    type: Boolean,
+    default: 0,
+  },
+  admin: {
+    type: Boolean,
+    default: 0,
+  },
 });
 
-const Empleado = mongoose.model("empleado",EmpleadoSchema);
-module.exports=Empleado;
+const Empleado = mongoose.model("empleado", EmpleadoSchema);
+module.exports = Empleado;
