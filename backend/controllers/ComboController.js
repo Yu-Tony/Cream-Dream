@@ -1,10 +1,23 @@
 const Combo = require("../models/ComboSchema");
+const myModule = require('./validation');
+var correcto = false;
 
 exports.combo_create = async (req, res) => {
   const { body } = req;
   let newCombo = new Combo(body);
 
-  await newCombo
+  try
+  {
+    correcto = myModule.ValidateCombo(newCombo); 
+
+  }catch (error) 
+  {
+    console.error(error);
+  }
+
+  if(correcto)
+  {
+    await newCombo
     .save()
     .then((newObject) =>
       console.log("Se creó correctamente el combo", newObject)
@@ -15,6 +28,11 @@ exports.combo_create = async (req, res) => {
     });
 
   res.send(newCombo);
+  }
+  else{
+    res.send("Error en el tipo de dato ingresado");
+  }
+ 
 };
 
 exports.combo_update = async (req, res) => {

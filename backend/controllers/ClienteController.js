@@ -1,11 +1,30 @@
 const Cliente = require("../models/ClienteSchema");
+const myModule = require('./validation');
+var correcto = false;
+var bcrypt = require('bcrypt');
+
 
 exports.cliente_signin = async (req, res) => {
   const { body } = req;
 
   let newCliente = new Cliente(body);
 
-  await newCliente
+  try
+  {
+    correcto = myModule.ValidatePersona(newCliente); 
+
+  }catch (error) 
+  {
+    console.error(error);
+  }
+
+  if(correcto)
+  {
+
+    //uses a cost parameter that specify the number of cycles to use in the algorithm. The cost parameter is represented by an integer value between 4 to 31
+    newCliente.contrasena = bcrypt.hashSync(newCliente.contrasena, 10);
+
+    await newCliente
     .save()
     .then((newObject) => {
       console.log("Success", newObject);
@@ -15,6 +34,13 @@ exports.cliente_signin = async (req, res) => {
       console.error("error-cliente_signin");
       res.send({ message: "error" });
     });
+
+
+  }
+  else{
+    res.send("Error en el tipo de dato ingresado");
+  }
+
 };
 
 exports.cliente_login = async (req, res) => {

@@ -1,4 +1,7 @@
 const Pedido = require("../models/PedidoSchema");
+const myModule = require('./validation');
+var correcto = false;
+
 
 exports.pedido_update = async (req, res) => {
   const { id } = req.params;
@@ -7,7 +10,19 @@ exports.pedido_update = async (req, res) => {
   if (id == 0) {
     let newPedido = new Pedido(body);
 
-    await newPedido
+    
+    try
+    {
+      correcto = myModule.ValidatePedido(newPedido); 
+
+    }catch (error) 
+    {
+      console.error(error);
+    }
+
+    if(correcto)
+    {
+      await newPedido
       .save()
       .then((newObject) =>
         console.log("Se creó correctamente el pedido", newObject)
@@ -17,7 +32,13 @@ exports.pedido_update = async (req, res) => {
         res.send(err.errors);
       });
 
-    res.send(newPedido);
+      res.send(newPedido);
+    }
+    else{
+      res.send("Error en el tipo de dato ingresado");
+    }
+  
+
   } else {
     const pedidodb = await Pedido.findById(id);
 

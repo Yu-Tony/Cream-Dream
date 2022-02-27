@@ -13,7 +13,7 @@ const clienteSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  contraseña: {
+  contrasena: {
     type: String,
     required: true,
   },

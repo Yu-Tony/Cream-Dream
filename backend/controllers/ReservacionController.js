@@ -1,5 +1,7 @@
 const Reservacion = require("../models/ReservacionSchema");
 const Mesa = require("../models/MesaSchema");
+const myModule = require('./validation');
+var correcto = false;
 
 exports.reservacion_create = async (req, res) => {
   const { body } = req;
@@ -7,7 +9,18 @@ exports.reservacion_create = async (req, res) => {
   //Aqui deberia de ir la validación de la información.
   let newReservacion = new Reservacion(body);
 
-  await newReservacion //Funciones:
+  try
+  {
+    correcto = myModule.ValidateReservacion(newReservacion); 
+
+  }catch (error) 
+  {
+    console.error(error);
+  }
+
+  if(correcto)
+  {
+    await newReservacion //Funciones:
     .save() //Función si ese objeto modelo ya existe, lo actualiza; si es un objeto nuevo, lo inserta.
     .then((newObject) => console.log("Reservación creada con exito", newObject))
     .catch((err) => {
@@ -15,7 +28,13 @@ exports.reservacion_create = async (req, res) => {
       res.send(err.errors);
     });
 
-  res.send(newReservacion);
+    res.send(newReservacion);
+  }
+  else{
+    res.send("Error en el tipo de dato ingresado");
+  }
+
+ 
 };
 
 exports.reservacion_delete = async (req, res) => {

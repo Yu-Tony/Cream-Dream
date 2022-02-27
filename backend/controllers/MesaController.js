@@ -1,11 +1,24 @@
 const Mesa = require("../models/MesaSchema");
+const myModule = require('./validation');
+var correcto = false;
 
 exports.mesa_create = async (req, res) => {
   const { body } = req;
 
   let newMesa = new Mesa(body);
 
-  await newMesa
+  try
+  {
+    correcto = myModule.ValidateMesa(newMesa); 
+
+  }catch (error) 
+  {
+    console.error(error);
+  }
+
+  if(correcto)
+  {
+    await newMesa
     .save()
     .then((newObject) => {
       console.log("Success", newObject);
@@ -14,6 +27,15 @@ exports.mesa_create = async (req, res) => {
     .catch((err) => {
       console.log("error mesa.mesa_create");
     });
+
+    res.send(newMesa);
+  }
+  else{
+    res.send("Error en el tipo de dato ingresado");
+  }
+
+
+ 
 };
 
 exports.mesa_update = async (req, res) => {

@@ -1,12 +1,27 @@
 const Sucursal = require("../models/SucursalSchema");
-const Pedido = require("../models/SucursalSchema");
+const myModule = require('./validation');
+var correcto = false;
+
 
 exports.sucursal_create = async(req, res) =>
 {
     const {body} = req;
     let newSucursal = new Sucursal(body);
 
-    await newSucursal
+    try
+    {
+      correcto = myModule.ValidateSucursal(newSucursal); 
+  
+    }catch (error) 
+    {
+      console.error(error);
+    }
+
+    
+
+    if(correcto)
+    {
+        await newSucursal
         .save()
         .then((newObject) => console.log("Se creó correctamente la sucursal", newObject))
         .catch((err) =>
@@ -15,7 +30,15 @@ exports.sucursal_create = async(req, res) =>
             res.send(err.errors);
         });
 
-    res.send(newSucursal);
+        res.send(newSucursal);
+    }
+    else{
+        res.send("Error en el tipo de dato ingresado");
+    }
+
+
+  
+   
 }
 
 exports.sucursal_delete = async(req, res) =>

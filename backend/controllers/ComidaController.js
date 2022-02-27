@@ -1,11 +1,24 @@
 const Comida = require("../models/ComidaSchema");
+const myModule = require('./validation');
+var correcto = false;
 
 exports.comida_create = async (req, res) => {
   const { body } = req;
 
   let newComida = new Comida(body);
 
-  await newComida
+  try
+  {
+    correcto = myModule.ValidateComida(newComida); 
+
+  }catch (error) 
+  {
+    console.error(error);
+  }
+
+  if(correcto)
+  {
+    await newComida
     .save()
     .then((newObject) => {
       console.log("Success", newObject);
@@ -13,8 +26,18 @@ exports.comida_create = async (req, res) => {
     })
     .catch((err) => {
       console.error("error-comida_create", err);
-      res.send("error");
+      res.send("error al crear la comida");
     });
+
+  }
+  else{
+    res.send("Error en el tipo de dato ingresado");
+  }
+
+ 
+  
+
+  
 };
 
 exports.comida_update = async (req, res) => {
