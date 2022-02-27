@@ -1,4 +1,5 @@
 const Mesa = require("../models/MesaSchema");
+const CONST = require("../constants");
 
 exports.mesa_create = async (req, res) => {
   const { body } = req;
@@ -8,11 +9,11 @@ exports.mesa_create = async (req, res) => {
   await newMesa
     .save()
     .then((newObject) => {
-      console.log("Success", newObject);
-      res.send({ message: "Success" });
+      console.log(CONST.created_success, newObject);
+      res.send({ message: `mesa ${CONST.created_success}` });
     })
     .catch((err) => {
-      console.log("error mesa.mesa_create");
+      console.log(`${CONST.error.toUpperCase()}: ${err.message} in mesa_create`);
     });
 };
 
@@ -23,12 +24,12 @@ exports.mesa_update = async (req, res) => {
   try {
     await Mesa.findByIdAndUpdate(id, body)
       .then((newObject) => {
-        console.log("Updated", newObject);
-        res.send({ message: "Updated" });
+        console.log(`mesa ${CONST.updated_success}`, newObject);
+        res.send({ message: `mesa ${CONST.updated_success}` });
       })
       .catch((err) => {
-        console.error("error mesa.mesa_update", err);
-        res.send({ message: "Error updating mesa" });
+        console.error(`${CONST.error.toUpperCase()}: ${err.message} in mesa_update`);
+        res.send({ message: `mesa ${CONST.not_found}` });
       });
   } catch (err) {
     res.send(err);

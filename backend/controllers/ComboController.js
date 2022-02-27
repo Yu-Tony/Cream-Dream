@@ -1,4 +1,5 @@
 const Combo = require("../models/ComboSchema");
+const CONST = require("../constants");
 
 exports.combo_create = async (req, res) => {
   const { body } = req;
@@ -7,10 +8,10 @@ exports.combo_create = async (req, res) => {
   await newCombo
     .save()
     .then((newObject) =>
-      console.log("Se creó correctamente el combo", newObject)
+      console.log(CONST.created_success, newObject)
     )
     .catch((err) => {
-      console.error("No se pudo crear correctamente el combo", err);
+      console.error(`${CONST.error.toUpperCase()}: ${err.message} in combo_create`);
       res.send(err.errors);
     });
 
@@ -24,10 +25,10 @@ exports.combo_update = async (req, res) => {
   const combodb = await Combo.findById(id);
 
   if (combodb) {
-    const data = await Combo.findOneAndUpdate({ _id: id }, body);
-    res.send({ message: "Combo actualizado correctamente" });
+    const updated = await Combo.findOneAndUpdate({ _id: id }, body);
+    res.send({ message: `${updated.nombre} ${CONST.updated_success}` });
   } else {
-    res.send({ message: "No existe un combo con ese ID" });
+    res.send({ message: `combo ${CONST.not_found}` });
   }
 };
 
@@ -36,7 +37,7 @@ exports.combo_delete = async (req, res) => {
 
   await Combo.deleteOne({ _id: id });
 
-  res.send({ message: "Combo eliminado exitosamente" });
+  res.send({ message: CONST.deleted_success });
 };
 
 exports.combo_get = async (req, res) => {
@@ -47,7 +48,7 @@ exports.combo_get = async (req, res) => {
     if (data) {
       res.send(data);
     } else {
-      res.send({ message: "El combo no existe" });
+      res.send({ message: `${CONST.not_found.toUpperCase()}: in combo_get` });
     }
   } else {
     const data = await Combo.find();
@@ -62,6 +63,6 @@ exports.combo_getById = async (req, res) => {
   if (data) {
     res.send(data);
   } else {
-    res.send({ message: "El combo no existe" });
+    res.send({ message: `${CONST.not_found.toUpperCase()}: in combo_getById` });
   }
 };

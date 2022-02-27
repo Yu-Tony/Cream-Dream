@@ -1,4 +1,5 @@
 const Cuenta = require("../models/CuentaSchema");
+const CONST = require("../constants");
 
 exports.cuenta_create = async(req,res)=>{
     const{ body }=req;
@@ -7,8 +8,8 @@ exports.cuenta_create = async(req,res)=>{
 
     await newCuenta
     .save()
-    .then((newObject)=>console.log("Success!", newObject))
-    .catch((err)=> console.error("oops!!", err))
+    .then((newObject)=>console.log(CONST.created_success, newObject))
+    .catch((err)=> console.error(`${CONST.error.toUpperCase()}: ${err.message} in cuenta_create`))
 
     res.send(newCuenta);
 }

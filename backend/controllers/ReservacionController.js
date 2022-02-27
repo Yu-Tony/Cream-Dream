@@ -1,5 +1,6 @@
 const Reservacion = require("../models/ReservacionSchema");
 const Mesa = require("../models/MesaSchema");
+const CONST = require("../constants");
 
 exports.reservacion_create = async (req, res) => {
   const { body } = req;
@@ -9,9 +10,9 @@ exports.reservacion_create = async (req, res) => {
 
   await newReservacion //Funciones:
     .save() //Función si ese objeto modelo ya existe, lo actualiza; si es un objeto nuevo, lo inserta.
-    .then((newObject) => console.log("Reservación creada con exito", newObject))
+    .then((newObject) => console.log(CONST.created_success, newObject))
     .catch((err) => {
-      console.error("Oops! Error al querer hacer una reservación", err);
+      console.error(`${CONST.error.toUpperCase()}: ${err.message} in reservacion_create`);
       res.send(err.errors);
     });
 
@@ -23,7 +24,7 @@ exports.reservacion_delete = async (req, res) => {
 
   await Reservacion.deleteOne({ _id: id });
 
-  res.send({ message: "Reservación eliminada" });
+  res.send({ message: CONST.deleted_success });
 };
 
 exports.reservacion_getById = async (req, res) => {
@@ -33,7 +34,7 @@ exports.reservacion_getById = async (req, res) => {
   if (data) {
     res.send(data);
   } else {
-    res.send({ message: "La reservación no existe" });
+    res.send({ message: `${CONST.not_found.toUpperCase()}: in reservacion_getById` });
   }
 };
 
@@ -49,6 +50,6 @@ exports.reservacion_getByPeopleDateSucursal = async (req, res) => {
 
     //TODO completar la reservacion
   } else {
-    res.send({ message: "No existe reservación con los datos ingresados" });
+    res.send({ message: `${CONST.not_found.toUpperCase()}: in reservacion_getByPeopleDateSucursal` });
   }
 };
