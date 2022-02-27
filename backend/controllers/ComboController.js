@@ -7,37 +7,90 @@ exports.combo_create = async (req, res) => {
 
   await newCombo
     .save()
-    .then((newObject) =>
-      console.log(CONST.created_success, newObject)
-    )
+    .then((newObject) => {
+      console.log(CONST.created_success, newObject);
+      res.send({
+        success: true,
+        message: `${newObject.nombre} ${CONST.created_success}`,
+        data: newObject,
+      });
+    })
     .catch((err) => {
-      console.error(`${CONST.error.toUpperCase()}: ${err.message} in combo_create`);
-      res.send(err.errors);
+      console.error(
+        `${CONST.error.toUpperCase()}: ${err.message} in combo_create`
+      );
+      res.send({
+        success: false,
+        message: err.message,
+      });
     });
-
-  res.send(newCombo);
 };
 
 exports.combo_update = async (req, res) => {
   const { id } = req.params;
   const { body } = req;
 
-  const combodb = await Combo.findById(id);
+  try {
+    const combodb = await Combo.findById(id);
 
-  if (combodb) {
-    const updated = await Combo.findOneAndUpdate({ _id: id }, body);
-    res.send({ message: `${updated.nombre} ${CONST.updated_success}` });
-  } else {
-    res.send({ message: `combo ${CONST.not_found}` });
+    if (combodb) {
+      const updated = await Combo.findOneAndUpdate({ _id: id }, body, {
+        returnOriginal: false,
+      });
+
+      console.log(`${updated.nombre} ${CONST.updated_success}`);
+      res.send({
+        success: true,
+        message: `${updated.nombre} ${CONST.updated_success}`,
+        data: updated,
+      });
+    } else {
+      console.log(`${CONST.not_found.toUpperCase()}: in combo_update`);
+      res.send({
+        success: false,
+        message: `combo ${CONST.not_found}`,
+      });
+    }
+  } catch (err) {
+    console.log(`${CONST.error.toUpperCase()} ${err.message} in combo_update`);
+
+    res.send({
+      success: false,
+      message: err.message,
+    });
   }
 };
 
 exports.combo_delete = async (req, res) => {
   const { id } = req.params;
 
-  await Combo.deleteOne({ _id: id });
+  try {
+    const combodb = await Combo.findById(id);
 
-  res.send({ message: CONST.deleted_success });
+    if (combodb) {
+      await Combo.deleteOne({ _id: id });
+
+      console.log(`${combodb.nombre} ${CONST.deleted_success}`);
+      res.send({
+        success: true,
+        message: `cliente ${CONST.deleted_success}`,
+      });
+    } else {
+      console.error(`${CONST.not_found.toUpperCase()}: in combo_delete`);
+      res.send({
+        success: false,
+        message: `combo ${CONST.not_found}`,
+      });
+    }
+  } catch (err) {
+    console.error(
+      `${CONST.error.toUpperCase()}: ${err.message} in combo_delete`
+    );
+    res.send({
+      success: false,
+      message: err.message,
+    });
+  }
 };
 
 exports.combo_get = async (req, res) => {
@@ -46,9 +99,18 @@ exports.combo_get = async (req, res) => {
     const data = await Combo.find({ nombre: n });
 
     if (data) {
-      res.send(data);
+      console.log(`${CONST.data_found.toUpperCase()} combo_get`);
+      res.send({
+        success: true,
+        message: `combos ${CONST.data_found}`,
+        data,
+      });
     } else {
-      res.send({ message: `${CONST.not_found.toUpperCase()}: in combo_get` });
+      console.log(`${CONST.not_data_found.toUpperCase()}: in combo_get`);
+      res.send({
+        success: false,
+        message: `combo ${CONST.not_found}`,
+      });
     }
   } else {
     const data = await Combo.find();
@@ -58,11 +120,30 @@ exports.combo_get = async (req, res) => {
 
 exports.combo_getById = async (req, res) => {
   const { id } = req.params;
-  const data = await Combo.findById(id);
 
-  if (data) {
-    res.send(data);
-  } else {
-    res.send({ message: `${CONST.not_found.toUpperCase()}: in combo_getById` });
+  try {
+    const combodb = await Combo.findById(id);
+
+    if (combodb) {
+      console.log(`${CONST.data_found.toUpperCase()} combo_getById`);
+      res.send({
+        success: true,
+        data: combodb,
+      });
+    } else {
+      console.log(`${CONST.not_found.toUpperCase()}: in combo_getById`);
+      res.send({
+        success: false,
+        message: `combos ${CONST.not_found}`,
+      });
+    }
+  } catch (err) {
+    console.log(
+      `${CONST.error.toUpperCase()}: ${err.message} in combo_getById `
+    );
+    res.send({
+      success: false,
+      message: err.message,
+    });
   }
 };
