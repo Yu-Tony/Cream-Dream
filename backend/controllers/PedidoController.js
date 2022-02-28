@@ -1,31 +1,42 @@
 const Pedido = require("../models/PedidoSchema");
+const { ValidatePedido } = require("./validation");
 
 exports.pedido_update = async (req, res) => {
   const { id } = req.params;
   const { body } = req;
 
   if (id == 0) {
-    let newPedido = new Pedido(body);
+    const result = ValidatePedido(body);
 
-    await newPedido
-      .save()
-      .then((newObject) => {
-        console.log(CONST.created_success, newObject);
-        res.send({
-          success: true,
-          message: `pedido ${CONST.created_success}`,
-          data: newObject,
+    if (result) {
+      let newPedido = new Pedido(body);
+
+      await newPedido
+        .save()
+        .then((newObject) => {
+          console.log(CONST.created_success, newObject);
+          res.send({
+            success: true,
+            message: `pedido ${CONST.created_success}`,
+            data: newObject,
+          });
+        })
+        .catch((err) => {
+          console.error(
+            `${CONST.error.toUpperCase()}: ${err.message} in pedido_update`
+          );
+          res.send({
+            success: false,
+            message: err.message,
+          });
         });
-      })
-      .catch((err) => {
-        console.error(
-          `${CONST.error.toUpperCase()}: ${err.message} in pedido_update`
-        );
-        res.send({
-          success: false,
-          message: err.message,
-        });
+    } else {
+      console.log(`${CONST.valid_info.toUpperCase()}: in pedido_update`);
+      res.send({
+        success: false,
+        message: CONST.valid_info,
       });
+    }
   } else {
     try {
       const pedidodb = await Pedido.findById(id);

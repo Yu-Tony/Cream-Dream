@@ -1,80 +1,111 @@
 const Cliente = require("../models/ClienteSchema");
 const CONST = require("../constants");
+const { ValidatePersona } = require("./validation");
 
 exports.cliente_signin = async (req, res) => {
   const { body } = req;
 
-  let newCliente = new Cliente(body);
+  const result = ValidatePersona(body);
 
-  await newCliente
-    .save()
-    .then((newObject) => {
-      console.log(`cliente ${newObject.nombre} ${CONST.singup}`);
-      res.send({
-        success: true,
-        message: `${CONST.singup}`,
+  if (result) {
+    let newCliente = new Cliente(body);
+
+    await newCliente
+      .save()
+      .then((newObject) => {
+        console.log(`cliente ${newObject.nombre} ${CONST.singup}`);
+        res.send({
+          success: true,
+          message: `${CONST.singup}`,
+        });
+      })
+      .catch((err) => {
+        console.error(
+          `${CONST.error.toUpperCase()}: cliente_signin ${err.message}`
+        );
+        res.send({
+          success: false,
+          message: err.message,
+          error_code: err.code,
+        });
       });
-    })
-    .catch((err) => {
-      console.error(
-        `${CONST.error.toUpperCase()}: cliente_signin ${err.message}`
-      );
-      res.send({
-        success: false,
-        message: err.message,
-        error_code: err.code,
-      });
+  } else {
+    console.log(`${CONST.valid_info.toUpperCase()}: in cliente_signin`);
+    res.send({
+      success: false,
+      message: CONST.valid_info,
     });
+  }
 };
 
 exports.cliente_login = async (req, res) => {
-  const { correo, contraseña } = req.body;
-  const clientedb = await Cliente.findOne({ correo, contraseña });
+  const { correo, contrasena } = req.body;
 
-  if (clientedb) {
-    console.log(`cliente ${correo} ${CONST.login}`);
-    res.send({
-      success: true,
-      message: CONST.login,
-    });
+  const result = ValidatePersona({ correo, contrasena });
+
+  if (result) {
+    const clientedb = await Cliente.findOne({ correo, contrasena });
+    if (clientedb) {
+      console.log(`cliente ${correo} ${CONST.login}`);
+      res.send({
+        success: true,
+        message: CONST.login,
+      });
+    } else {
+      console.log(`cliente ${correo} ${CONST.invalid_cred}`);
+      res.send({
+        success: false,
+        message: CONST.invalid_cred,
+      });
+    }
   } else {
-    console.log(`cliente ${correo} ${CONST.invalid_cred}`);
+    console.log(`${CONST.valid_info.toUpperCase()}: in cliente_login`);
     res.send({
       success: false,
-      message: CONST.invalid_cred,
+      message: CONST.valid_info,
     });
   }
 };
 
 exports.cliente_update = async (req, res) => {
   const { id } = req.params;
-  const { contraseña } = req.body;
+  const { contrasena } = req.body;
 
-  try {
-    const clientedb = await Cliente.findById(id);
+  const result = ValidatePersona({ contrasena });
 
-    if (clientedb) {
-      const updated = await Cliente.findByIdAndUpdate(id, { contraseña });
+  if (result) {
+    try {
+      const clientedb = await Cliente.findById(id);
 
-      console.log(`cliente ${clientedb.nombre} ${CONST.updated_success}`);
-      res.send({
-        success: true,
-        message: `cliente ${CONST.updated_success}`,
-      });
-    } else {
-      console.log(`${CONST.not_found.toUpperCase()}: in cliente_update`);
+      if (clientedb) {
+        const updated = await Cliente.findByIdAndUpdate(id, { contrasena });
+
+        console.log(`cliente ${clientedb.nombre} ${CONST.updated_success}`);
+        res.send({
+          success: true,
+          message: `cliente ${CONST.updated_success}`,
+        });
+      } else {
+        console.log(`${CONST.not_found.toUpperCase()}: in cliente_update`);
+        res.send({
+          success: false,
+          message: `cliente ${CONST.not_found}`,
+        });
+      }
+    } catch (err) {
+      console.log(
+        `${CONST.error.toUpperCase()}: ${err.message} in cliente_update`
+      );
       res.send({
         success: false,
-        message: `cliente ${CONST.not_found}`,
+        message: err.message,
       });
     }
-  } catch (err) {
-    console.log(
-      `${CONST.error.toUpperCase()}: ${err.message} in cliente_update`
-    );
+  } else {
+    console.log(`${CONST.valid_info.toUpperCase()}: in cliente_update`);
     res.send({
       success: false,
-      message: err.message,
+      message: CONST.valid_info,
     });
   }
 };

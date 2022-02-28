@@ -1,63 +1,84 @@
 const Mesa = require("../models/MesaSchema");
 const CONST = require("../constants");
+const { ValidateMesa } = require("./validation");
 
 exports.mesa_create = async (req, res) => {
   const { body } = req;
 
-  let newMesa = new Mesa(body);
+  const result = ValidateMesa(body);
 
-  await newMesa
-    .save()
-    .then((newObject) => {
-      console.log(CONST.created_success, newObject);
-      res.send({
-        success: true,
-        message: `mesa ${CONST.created_success}`,
-        data: newObject,
+  if (result) {
+    let newMesa = new Mesa(body);
+
+    await newMesa
+      .save()
+      .then((newObject) => {
+        console.log(CONST.created_success, newObject);
+        res.send({
+          success: true,
+          message: `mesa ${CONST.created_success}`,
+          data: newObject,
+        });
+      })
+      .catch((err) => {
+        console.error(
+          `${CONST.error.toUpperCase()}: ${err.message} in mesa_create`
+        );
+        res.send({
+          success: false,
+          message: err.message,
+        });
       });
-    })
-    .catch((err) => {
-      console.error(
-        `${CONST.error.toUpperCase()}: ${err.message} in mesa_create`
-      );
-      res.send({
-        success: false,
-        message: err.message,
-      });
+  } else {
+    console.log(`${CONST.valid_info.toUpperCase()}: in mesa_create`);
+    res.send({
+      success: false,
+      message: CONST.valid_info,
     });
+  }
 };
 
 exports.mesa_update = async (req, res) => {
   const { id } = req.params;
   const { body } = req;
 
-  try {
-    const mesadb = await Mesa.findById(id);
+  const result = ValidateMesa(body);
 
-    if (mesadb) {
-      const updated = await Mesa.findByIdAndUpdate(id, body, {
-        returnOriginal: false,
-      });
+  if (result) {
+    try {
+      const mesadb = await Mesa.findById(id);
 
-      console.log(`mesa ${CONST.updated_success}`);
-      res.send({
-        success: true,
-        message: `mesa ${CONST.updated_success}`,
-        data: updated,
-      });
-    } else {
-      console.log(`${CONST.not_found.toUpperCase()}: in mesa_update`);
+      if (mesadb) {
+        const updated = await Mesa.findByIdAndUpdate(id, body, {
+          returnOriginal: false,
+        });
+
+        console.log(`mesa ${CONST.updated_success}`);
+        res.send({
+          success: true,
+          message: `mesa ${CONST.updated_success}`,
+          data: updated,
+        });
+      } else {
+        console.log(`${CONST.not_found.toUpperCase()}: in mesa_update`);
+        res.send({
+          success: false,
+          message: `mesa ${CONST.not_found}`,
+        });
+      }
+    } catch (err) {
+      console.log(`${CONST.error.toUpperCase()} ${err.message} in mesa_update`);
+
       res.send({
         success: false,
-        message: `mesa ${CONST.not_found}`,
+        message: err.message,
       });
     }
-  } catch (err) {
-    console.log(`${CONST.error.toUpperCase()} ${err.message} in mesa_update`);
-
+  } else {
+    console.log(`${CONST.valid_info.toUpperCase()}: in mesa_create`);
     res.send({
       success: false,
-      message: err.message,
+      message: CONST.valid_info,
     });
   }
 };
