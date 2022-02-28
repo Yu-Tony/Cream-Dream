@@ -44,15 +44,33 @@ exports.cliente_signin = async (req, res) => {
 exports.cliente_login = async (req, res) => {
   const { correo, contrasena } = req.body;
 
-  contrasena = bcrypt.hashSync(contrasena, 10);
+  const clientedb = await Cliente.findOne({ correo });
 
-  const clientedb = await Cliente.findOne({ correo, contrasena });
   if (clientedb) {
-    console.log(`cliente ${correo} ${CONST.login}`);
-    res.send({
-      success: true,
-      message: CONST.login,
-    });
+    bcrypt
+      .compare(contrasena, clientedb.contrasena)
+      .then((result) => {
+        if (result) {
+          console.log(`cliente ${correo} ${CONST.login}`);
+          res.send({
+            success: true,
+            message: CONST.login,
+          });
+        } else {
+          console.log(`cliente ${correo} ${CONST.invalid_cred}`);
+          res.send({
+            success: false,
+            message: CONST.invalid_cred,
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(`${CONST.error.toUpperCase()}: in cliente_login`);
+        res.send({
+          success: false,
+          message: err,
+        });
+      });
   } else {
     console.log(`cliente ${correo} ${CONST.invalid_cred}`);
     res.send({
