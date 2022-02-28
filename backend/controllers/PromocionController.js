@@ -1,10 +1,15 @@
-
 const Promo = require("../models/PromocionSchema");
+const CONST = require("../constants");
 
 exports.promo_getall = async(req,res)=>{
     const data = await Promo.find();
 
-    res.send(data);
+    console.log(`${CONST.data_found.toUpperCase()} promo_getall`);
+    res.send({
+      success: true,
+      message: `promociones ${CONST.data_found}`,
+      data,
+    });
 }
 
 exports.promo_create = async(req,res)=>{
@@ -14,17 +19,60 @@ exports.promo_create = async(req,res)=>{
 
     await newPromo
     .save()
-    .then((newObject)=>console.log("Success!", newObject))
-    .catch((err)=> console.error("oops!!", err))
+    .then((newObject)=>
+    {
+        console.log(CONST.created_success, newObject);
 
-    res.send(newPromo);
+        res.send({
+          success: true,
+          message: `${newObject.nombre} ${CONST.created_success}`,
+          data: newObject,
+        });
+    })
+    .catch((err)=> 
+    {
+        console.error(
+            `${CONST.error.toUpperCase()}: ${err.message} in promo_create`
+          );
+    
+          res.send({
+            success: false,
+            message: err.message,
+          });
+    })
+
+
 }
 
 exports.promo_delete = async(req,res)=>{
     const {id} = req.params;
 
-    await Promo.deleteOne({_id:id});
-
-    res.send({message:"Registro eliminado exitosamente"});
+    try {
+        const promodb = await Promo.findById(id);
+    
+        if (promodb) {
+          await Promo.findByIdAndDelete(id);
+    
+          console.log(`${promodb.nombre} ${CONST.deleted_success}`);
+          res.send({
+            success: true,
+            message: `promoción ${CONST.deleted_success}`,
+          });
+        } else {
+          console.error(`${CONST.not_found.toUpperCase()}: in promo_delete`);
+          res.send({
+            success: false,
+            message: `promoción ${CONST.not_found}`,
+          });
+        }
+      } catch (err) {
+        console.error(
+          `${CONST.error.toUpperCase()}: ${err.message} in promo_delete`
+        );
+        res.send({
+          success: false,
+          message: err.message,
+        });
+      }
 }
 
