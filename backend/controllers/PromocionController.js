@@ -1,20 +1,14 @@
 const Promo = require("../models/PromocionSchema");
 const CONST = require("../constants");
-
-exports.promo_getall = async(req,res)=>{
-    const data = await Promo.find();
-
-    console.log(`${CONST.data_found.toUpperCase()} promo_getall`);
-    res.send({
-      success: true,
-      message: `promociones ${CONST.data_found}`,
-      data,
-    });
-}
+const { ValidatePromo } = require("./validation");
 
 exports.promo_create = async(req,res)=>{
-    const{ body }=req;
 
+  const{ body }=req;
+
+  const result = ValidatePromo(body);
+
+  if (result) {
     let newPromo = new Promo(body);
 
     await newPromo
@@ -39,9 +33,25 @@ exports.promo_create = async(req,res)=>{
             success: false,
             message: err.message,
           });
-    })
+    });
+  }else {
+    console.log(`${CONST.valid_info.toUpperCase()}: in promo_create`);
+    res.send({
+      success: false,
+      message: CONST.valid_info,
+    });
+  }
+}
 
+exports.promo_getall = async(req,res)=>{
+  const data = await Promo.find();
 
+  console.log(`${CONST.data_found.toUpperCase()} promo_getall`);
+  res.send({
+    success: true,
+    message: `promociones ${CONST.data_found}`,
+    data,
+  });
 }
 
 exports.promo_delete = async(req,res)=>{

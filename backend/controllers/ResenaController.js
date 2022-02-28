@@ -1,37 +1,50 @@
 const Resena = require("../models/ResenaSchema"); //Importamos el modelo del Resena
 const CONST = require("../constants");
+const { ValidateResena } = require("./validation");
 
 //funcionalidad para insertar
 exports.resena_create = async (req, res) => {
   const { body } = req; //Del request le sacamos el body.
 
+  const result = ValidateResena(body);
   //Aqui deberia de ir la validación de la información.
 
-  let newResena = new Resena(body); //Con la info del body creo un objeto del tipo escuela, la guardo en la variable.
+  if (result) {
 
-  await newResena //Funciones:
-    .save() //Función si ese objeto modelo ya existe, lo actualiza; si es un objeto nuevo, lo inserta.
-    .then((newObject) => 
-    {
-      console.log(CONST.created_success, newObject);
+    let newResena = new Resena(body); //Con la info del body creo un objeto del tipo escuela, la guardo en la variable.
 
-      res.send({
-        success: true,
-        message: `${"Reseña"} ${CONST.created_success}`,
-        data: newObject,
+    await newResena //Funciones:
+      .save() //Función si ese objeto modelo ya existe, lo actualiza; si es un objeto nuevo, lo inserta.
+      .then((newObject) => 
+      {
+        console.log(CONST.created_success, newObject);
+  
+        res.send({
+          success: true,
+          message: `${"Reseña"} ${CONST.created_success}`,
+          data: newObject,
+        });
+      })
+      .catch((err) => {
+        console.error(
+          `${CONST.error.toUpperCase()}: ${err.message} in resena_create`
+        );
+  
+        res.send({
+          success: false,
+          message: err.message,
+        });
+  
       });
-    })
-    .catch((err) => {
-      console.error(
-        `${CONST.error.toUpperCase()}: ${err.message} in resena_create`
-      );
-
-      res.send({
-        success: false,
-        message: err.message,
-      });
-
+  }else {
+    console.log(`${CONST.valid_info.toUpperCase()}: in resena_create`);
+    res.send({
+      success: false,
+      message: CONST.valid_info,
     });
+  }
+
+
 
 };
 

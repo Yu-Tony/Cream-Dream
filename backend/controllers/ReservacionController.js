@@ -1,37 +1,49 @@
 const Reservacion = require("../models/ReservacionSchema");
 const Mesa = require("../models/MesaSchema");
 const CONST = require("../constants");
+const { ValidateReservacion } = require("./validation");
 
 exports.reservacion_create = async (req, res) => {
   const { body } = req;
 
-  //Aqui deberia de ir la validación de la información.
-  let newReservacion = new Reservacion(body);
+  const result = ValidateReservacion(body);
 
-  await newReservacion //Funciones:
-    .save() //Función si ese objeto modelo ya existe, lo actualiza; si es un objeto nuevo, lo inserta.
-    .then((newObject) => 
-    {
-      console.log(CONST.created_success, newObject);
+  if (result) {
+    //Aqui deberia de ir la validación de la información.
+    let newReservacion = new Reservacion(body);
 
-      res.send({
-        success: true,
-        message: `${"Reservación"} ${CONST.created_success}`,
-        data: newObject,
+    await newReservacion //Funciones:
+      .save() //Función si ese objeto modelo ya existe, lo actualiza; si es un objeto nuevo, lo inserta.
+      .then((newObject) => 
+      {
+        console.log(CONST.created_success, newObject);
+
+        res.send({
+          success: true,
+          message: `${"Reservación"} ${CONST.created_success}`,
+          data: newObject,
+        });
+      })
+      .catch((err) => {
+        
+        console.error(
+          `${CONST.error.toUpperCase()}: ${err.message} in reservacion_create`
+        );
+
+        res.send({
+          success: false,
+          message: err.message,
+        });
+
       });
-    })
-    .catch((err) => {
-      
-      console.error(
-        `${CONST.error.toUpperCase()}: ${err.message} in reservacion_create`
-      );
-
-      res.send({
-        success: false,
-        message: err.message,
-      });
-
+  }
+  else {
+    console.log(`${CONST.valid_info.toUpperCase()}: in reservacion_create`);
+    res.send({
+      success: false,
+      message: CONST.valid_info,
     });
+  }
 
 };
 

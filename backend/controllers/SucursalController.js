@@ -1,12 +1,15 @@
 const Sucursal = require("../models/SucursalSchema");
-const Pedido = require("../models/SucursalSchema");
 const CONST = require("../constants");
+const { ValidateSucursal } = require("./validation");
 
 exports.sucursal_create = async (req, res) => {
   const { body } = req;
-  let newSucursal = new Sucursal(body);
+  
+  const result = ValidateSucursal(body);
 
-  await newSucursal
+  if (result) {
+    let newSucursal = new Sucursal(body);
+    await newSucursal
     .save()
     .then((newObject) => {
       console.log(`${CONST.created_success}`, newObject);
@@ -25,6 +28,15 @@ exports.sucursal_create = async (req, res) => {
         message: err.message,
       });
     });
+  }else {
+    console.log(`${CONST.valid_info.toUpperCase()}: in sucursal_create`);
+    res.send({
+      success: false,
+      message: CONST.valid_info,
+    });
+  }
+
+ 
 };
 
 exports.sucursal_delete = async (req, res) => {
