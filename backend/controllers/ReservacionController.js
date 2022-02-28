@@ -10,46 +10,126 @@ exports.reservacion_create = async (req, res) => {
 
   await newReservacion //Funciones:
     .save() //Función si ese objeto modelo ya existe, lo actualiza; si es un objeto nuevo, lo inserta.
-    .then((newObject) => console.log(CONST.created_success, newObject))
+    .then((newObject) => 
+    {
+      console.log(CONST.created_success, newObject);
+
+      res.send({
+        success: true,
+        message: `${"Reservación"} ${CONST.created_success}`,
+        data: newObject,
+      });
+    })
     .catch((err) => {
-      console.error(`${CONST.error.toUpperCase()}: ${err.message} in reservacion_create`);
-      res.send(err.errors);
+      
+      console.error(
+        `${CONST.error.toUpperCase()}: ${err.message} in reservacion_create`
+      );
+
+      res.send({
+        success: false,
+        message: err.message,
+      });
+
     });
 
-  res.send(newReservacion);
 };
 
 exports.reservacion_delete = async (req, res) => {
   const { id } = req.params;
 
-  await Reservacion.deleteOne({ _id: id });
+  try {
+    const reservaciondb = await Reservacion.findById(id);
 
-  res.send({ message: CONST.deleted_success });
+    if (reservaciondb) {
+      await Reservacion.findByIdAndDelete(id);
+
+      console.log(`${"Reservación"} ${CONST.deleted_success}`);
+      res.send({
+        success: true,
+        message: `reservación ${CONST.deleted_success}`,
+      });
+    } else {
+      console.error(`${CONST.not_found.toUpperCase()}: in reservacion_delete`);
+      res.send({
+        success: false,
+        message: `reservación ${CONST.not_found}`,
+      });
+    }
+
+  }catch(err)
+  {
+    console.error(
+      `${CONST.error.toUpperCase()}: ${err.message} in reservacion_delete`
+    );
+    res.send({
+      success: false,
+      message: err.message,
+    });
+  }
 };
 
 exports.reservacion_getById = async (req, res) => {
   const { id } = req.params;
-  const data = await Reservacion.findById(id);
 
-  if (data) {
-    res.send(data);
-  } else {
-    res.send({ message: `${CONST.not_found.toUpperCase()}: in reservacion_getById` });
+  try {
+    const reservaciondb = await Reservacion.findById(id);
+    if (reservaciondb) {
+      console.log(`${CONST.data_found.toUpperCase()} inreservacion_getById`);
+
+      res.send({
+        success: true,
+        data: reservaciondb,
+      });
+    } else {
+      console.log(`${CONST.not_found.toUpperCase()}: in reservacion_getById`);
+      res.send({
+        success: false,
+        message: `reservación ${CONST.not_found}`,
+      });
+    }
+
+  }catch(err)
+  {
+    console.log(
+      `${CONST.error.toUpperCase()}: ${err.message} in reservacion_getById `
+    );
+
+    res.send({
+      success: false,
+      message: err.message,
+    });
   }
 };
 
 exports.reservacion_getByPeopleDateSucursal = async (req, res) => {
   const { p, f, s } = req.query;
-  const data = await Mesa.find({
-    sillas: p,
-    sucursal: s,
-  });
 
-  if (data) {
-    res.send(data);
+  try {
+    const reservaciondb = await Mesa.find({ sillas: p, sucursal: s,});
+    if (reservaciondb) {
+      console.log(`${CONST.data_found.toUpperCase()} reservacion_getByPeopleDateSucursal`);
 
-    //TODO completar la reservacion
-  } else {
-    res.send({ message: `${CONST.not_found.toUpperCase()}: in reservacion_getByPeopleDateSucursal` });
+      res.send({
+        success: true,
+        data: reservaciondb,
+      });
+    } else {
+      console.log(`${CONST.not_found.toUpperCase()}: in reservacion_getByPeopleDateSucursal`);
+      res.send({
+        success: false,
+        message: `Reservacion ${CONST.not_found}`,
+      });
+    }
+  }catch(err)
+  {
+    console.log(
+      `${CONST.error.toUpperCase()}: ${err.message} in reservacion_getByPeopleDateSucursal `
+    );
+
+    res.send({
+      success: false,
+      message: err.message,
+    });
   }
 };
