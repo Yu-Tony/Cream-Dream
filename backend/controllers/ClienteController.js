@@ -10,6 +10,8 @@ exports.cliente_signin = async (req, res) => {
   if (result) {
     let newCliente = new Cliente(body);
 
+    newCliente.contrasena = bcrypt.hashSync(newCliente.contrasena, 10);
+
     await newCliente
       .save()
       .then((newObject) => {
@@ -44,6 +46,8 @@ exports.cliente_login = async (req, res) => {
   const result = ValidatePersona({ correo, contrasena });
 
   if (result) {
+    contrasena = bcrypt.hashSync(contrasena, 10);
+
     const clientedb = await Cliente.findOne({ correo, contrasena });
     if (clientedb) {
       console.log(`cliente ${correo} ${CONST.login}`);
@@ -78,6 +82,8 @@ exports.cliente_update = async (req, res) => {
       const clientedb = await Cliente.findById(id);
 
       if (clientedb) {
+        contrasena = bcrypt.hashSync(contrasena, 10);
+
         const updated = await Cliente.findByIdAndUpdate(id, { contrasena });
 
         console.log(`cliente ${clientedb.nombre} ${CONST.updated_success}`);

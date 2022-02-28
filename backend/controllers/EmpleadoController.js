@@ -10,6 +10,8 @@ exports.empleado_create = async (req, res) => {
   if (result) {
     let newEmpleado = new Empleado(body);
 
+    newEmpleado.contrasena = bcrypt.hashSync(newEmpleado.contrasena, 10);
+
     await newEmpleado
       .save()
       .then((newObject) => {
@@ -47,6 +49,8 @@ exports.empleado_login = async (req, res) => {
   const result = ValidatePersona({ correo, contrasena });
 
   if (result) {
+    contrasena = bcrypt.hashSync(contrasena, 10);
+
     const empleadodb = await Empleado.findOne({ correo, contrasena });
 
     if (empleadodb) {
@@ -82,6 +86,8 @@ exports.empleado_update = async (req, res) => {
       const empleadodb = await Empleado.findById(id);
 
       if (empleadodb) {
+        body.contrasena = bcrypt.hashSync(body.contrasena, 10);
+
         const updated = await Empleado.findByIdAndUpdate(id, body);
 
         console.log(`empleado ${empleadodb.nombre} ${CONST.updated_success}`);
