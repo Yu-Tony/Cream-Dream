@@ -47,31 +47,21 @@ exports.empleado_create = async (req, res) => {
 exports.empleado_login = async (req, res) => {
   const { correo, contrasena } = req.body;
 
-  const result = ValidatePersona({ correo, contrasena });
+  contrasena = bcrypt.hashSync(contrasena, 10);
 
-  if (result) {
-    contrasena = bcrypt.hashSync(contrasena, 10);
+  const empleadodb = await Empleado.findOne({ correo, contrasena });
 
-    const empleadodb = await Empleado.findOne({ correo, contrasena });
-
-    if (empleadodb) {
-      console.log(`empleado ${correo} ${CONST.login}`);
-      res.send({
-        success: true,
-        message: CONST.login,
-      });
-    } else {
-      console.log(`empleado ${correo} ${CONST.invalid_cred}`);
-      res.send({
-        success: false,
-        message: CONST.invalid_cred,
-      });
-    }
+  if (empleadodb) {
+    console.log(`empleado ${correo} ${CONST.login}`);
+    res.send({
+      success: true,
+      message: CONST.login,
+    });
   } else {
-    console.log(`${CONST.valid_info.toUpperCase()}: in empleado_login`);
+    console.log(`empleado ${correo} ${CONST.invalid_cred}`);
     res.send({
       success: false,
-      message: CONST.valid_info,
+      message: CONST.invalid_cred,
     });
   }
 };

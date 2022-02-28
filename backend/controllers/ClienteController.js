@@ -44,30 +44,20 @@ exports.cliente_signin = async (req, res) => {
 exports.cliente_login = async (req, res) => {
   const { correo, contrasena } = req.body;
 
-  const result = ValidatePersona({ correo, contrasena });
+  contrasena = bcrypt.hashSync(contrasena, 10);
 
-  if (result) {
-    contrasena = bcrypt.hashSync(contrasena, 10);
-
-    const clientedb = await Cliente.findOne({ correo, contrasena });
-    if (clientedb) {
-      console.log(`cliente ${correo} ${CONST.login}`);
-      res.send({
-        success: true,
-        message: CONST.login,
-      });
-    } else {
-      console.log(`cliente ${correo} ${CONST.invalid_cred}`);
-      res.send({
-        success: false,
-        message: CONST.invalid_cred,
-      });
-    }
+  const clientedb = await Cliente.findOne({ correo, contrasena });
+  if (clientedb) {
+    console.log(`cliente ${correo} ${CONST.login}`);
+    res.send({
+      success: true,
+      message: CONST.login,
+    });
   } else {
-    console.log(`${CONST.valid_info.toUpperCase()}: in cliente_login`);
+    console.log(`cliente ${correo} ${CONST.invalid_cred}`);
     res.send({
       success: false,
-      message: CONST.valid_info,
+      message: CONST.invalid_cred,
     });
   }
 };
