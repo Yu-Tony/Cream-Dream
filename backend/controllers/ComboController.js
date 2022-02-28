@@ -1,62 +1,86 @@
 const Combo = require("../models/ComboSchema");
 const CONST = require("../constants");
+const { ValidateCombo } = require("./validation");
 
 exports.combo_create = async (req, res) => {
   const { body } = req;
-  let newCombo = new Combo(body);
 
-  await newCombo
-    .save()
-    .then((newObject) => {
-      console.log(CONST.created_success, newObject);
-      res.send({
-        success: true,
-        message: `${newObject.nombre} ${CONST.created_success}`,
-        data: newObject,
+  const result = ValidateCombo(body);
+
+  if (result) {
+    let newCombo = new Combo(body);
+
+    await newCombo
+      .save()
+      .then((newObject) => {
+        console.log(CONST.created_success, newObject);
+        res.send({
+          success: true,
+          message: `${newObject.nombre} ${CONST.created_success}`,
+          data: newObject,
+        });
+      })
+      .catch((err) => {
+        console.error(
+          `${CONST.error.toUpperCase()}: ${err.message} in combo_create`
+        );
+        res.send({
+          success: false,
+          message: err.message,
+        });
       });
-    })
-    .catch((err) => {
-      console.error(
-        `${CONST.error.toUpperCase()}: ${err.message} in combo_create`
-      );
-      res.send({
-        success: false,
-        message: err.message,
-      });
+  } else {
+    console.log(`${CONST.valid_info.toUpperCase()}: in combo_create`);
+    res.send({
+      success: false,
+      message: CONST.valid_info,
     });
+  }
 };
 
 exports.combo_update = async (req, res) => {
   const { id } = req.params;
   const { body } = req;
 
-  try {
-    const combodb = await Combo.findById(id);
+  const result = ValidateCombo(body);
 
-    if (combodb) {
-      const updated = await Combo.findOneAndUpdate({ _id: id }, body, {
-        returnOriginal: false,
-      });
+  if (result) {
+    try {
+      const combodb = await Combo.findById(id);
 
-      console.log(`${updated.nombre} ${CONST.updated_success}`);
-      res.send({
-        success: true,
-        message: `${updated.nombre} ${CONST.updated_success}`,
-        data: updated,
-      });
-    } else {
-      console.log(`${CONST.not_found.toUpperCase()}: in combo_update`);
+      if (combodb) {
+        const updated = await Combo.findOneAndUpdate({ _id: id }, body, {
+          returnOriginal: false,
+        });
+
+        console.log(`${updated.nombre} ${CONST.updated_success}`);
+        res.send({
+          success: true,
+          message: `${updated.nombre} ${CONST.updated_success}`,
+          data: updated,
+        });
+      } else {
+        console.log(`${CONST.not_found.toUpperCase()}: in combo_update`);
+        res.send({
+          success: false,
+          message: `combo ${CONST.not_found}`,
+        });
+      }
+    } catch (err) {
+      console.log(
+        `${CONST.error.toUpperCase()} ${err.message} in combo_update`
+      );
+
       res.send({
         success: false,
-        message: `combo ${CONST.not_found}`,
+        message: err.message,
       });
     }
-  } catch (err) {
-    console.log(`${CONST.error.toUpperCase()} ${err.message} in combo_update`);
-
+  } else {
+    console.log(`${CONST.valid_info.toUpperCase()}: in combo_update`);
     res.send({
       success: false,
-      message: err.message,
+      message: CONST.valid_info,
     });
   }
 };
