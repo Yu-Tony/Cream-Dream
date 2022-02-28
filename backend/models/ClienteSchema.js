@@ -12,8 +12,9 @@ const clienteSchema = new mongoose.Schema({
   correo: {
     type: String,
     required: true,
+    unique: true,
   },
-  contraseña: {
+  contrasena: {
     type: String,
     required: true,
   },

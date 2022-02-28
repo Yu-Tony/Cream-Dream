@@ -1,30 +1,73 @@
-const { query } = require("express");
 const Empleado = require("../models/EmpleadoSchema");
+const CONST = require("../constants");
+const { ValidatePersona } = require("./validation");
 
 exports.empleado_create = async (req, res) => {
   const { body } = req;
 
-  let newEmpleado = new Empleado(body);
+  const result = ValidatePersona(body);
 
-  await newEmpleado
-    .save()
-    .then((newObject) => console.log("Success!", newObject))
-    .catch((err) => {
-      //TODO: handle unique email error
-      console.error("oops!!", err);
+  if (result) {
+    let newEmpleado = new Empleado(body);
+
+    await newEmpleado
+      .save()
+      .then((newObject) => {
+        console.log(CONST.created_success, newObject);
+
+        res.send({
+          success: true,
+          message: `${newObject.nombre} ${CONST.created_success}`,
+          data: newObject,
+        });
+      })
+      .catch((err) => {
+        //TODO: handle unique email error
+        console.error(
+          `${CONST.error.toUpperCase()}: ${err.message} in empleado_create`
+        );
+
+        res.send({
+          success: false,
+          message: err.message,
+        });
+      });
+  } else {
+    console.log(`${CONST.valid_info.toUpperCase()}: in empleado_create`);
+    res.send({
+      success: false,
+      message: CONST.valid_info,
     });
-
-  res.send(newEmpleado);
+  }
 };
 
 exports.empleado_login = async (req, res) => {
   const { correo, contrasena } = req.body;
-  const empleadodb = await Empleado.findOne({ correo, contrasena });
 
-  if (empleadodb) {
-    res.send({ message: "login" });
+  const result = ValidatePersona({ correo, contrasena });
+
+  if (result) {
+    const empleadodb = await Empleado.findOne({ correo, contrasena });
+
+    if (empleadodb) {
+      console.log(`empleado ${correo} ${CONST.login}`);
+      res.send({
+        success: true,
+        message: CONST.login,
+      });
+    } else {
+      console.log(`empleado ${correo} ${CONST.invalid_cred}`);
+      res.send({
+        success: false,
+        message: CONST.invalid_cred,
+      });
+    }
   } else {
-    res.send({ message: "Invalid credentials" });
+    console.log(`${CONST.valid_info.toUpperCase()}: in empleado_login`);
+    res.send({
+      success: false,
+      message: CONST.valid_info,
+    });
   }
 };
 
@@ -32,40 +75,106 @@ exports.empleado_update = async (req, res) => {
   const { id } = req.params;
   const { body } = req;
 
-  try {
-    const empleadodb = await Empleado.findById(id);
+  const result = ValidatePersona(body);
 
-    if (empleadodb) {
-      const updated = await Empleado.findByIdAndUpdate(id, body);
+  if (result) {
+    try {
+      const empleadodb = await Empleado.findById(id);
 
-      res.send({ message: "El empleado se modifico" });
-    } else {
-      res.send({ message: "Empleado not found" });
+      if (empleadodb) {
+        const updated = await Empleado.findByIdAndUpdate(id, body);
+
+        console.log(`empleado ${empleadodb.nombre} ${CONST.updated_success}`);
+        res.send({
+          success: true,
+          message: `empleado ${CONST.updated_success}`,
+        });
+      } else {
+        console.log(`${CONST.not_found.toUpperCase()}: in empleado_update`);
+        res.send({
+          success: false,
+          message: `empleado ${CONST.not_found}`,
+        });
+      }
+    } catch (err) {
+      console.log(
+        `${CONST.error.toUpperCase()}: ${err.message} in empleado_update`
+      );
+      res.send({
+        success: false,
+        message: err.message,
+      });
     }
-  } catch (err) {
-    res.send(err);
+  } else {
+    console.log(`${CONST.valid_info.toUpperCase()}: in empleado_update`);
+    res.send({
+      success: false,
+      message: CONST.valid_info,
+    });
   }
 };
 
 exports.empleado_getById = async (req, res) => {
   const { id } = req.params;
-  const empleadodb = await Empleado.findById(id);
 
-  if (empleadodb) {
-    res.send(empleadodb);
-  } else {
-    res.send({ message: "error-empleado not-found" });
+  try {
+    const empleadodb = await Empleado.findById(id);
+
+    if (empleadodb) {
+      console.log(`${CONST.data_found.toUpperCase()} empleado_getById`);
+
+      res.send({
+        success: true,
+        data: empleadodb,
+      });
+    } else {
+      console.log(`${CONST.not_found.toUpperCase()}: in empleado_getById`);
+      res.send({
+        success: false,
+        message: `empleado ${CONST.not_found}`,
+      });
+    }
+  } catch (err) {
+    console.log(
+      `${CONST.error.toUpperCase()}: ${err.message} in empleado_getById`
+    );
+
+    res.send({
+      success: false,
+      message: err.message,
+    });
   }
 };
 
 exports.empleado_getBySucursal = async (req, res) => {
   const { s } = req.query;
 
-  const empleadodb = await Empleado.find({ Sucursal: s });
+  try {
+    const empleadodb = await Empleado.find({ Sucursal: s });
 
-  if (empleadodb) {
-    res.send(empleadodb);
-  } else {
-    res.send({ message: "error-empleado not-found" });
+    if (empleadodb) {
+      console.log(`${CONST.data_found.toUpperCase()} empleado_getBySucursal`);
+      res.send({
+        success: true,
+        data: empleadodb,
+      });
+    } else {
+      console.log(
+        `${CONST.not_found.toUpperCase()}: in empleado_getBySucursal`
+      );
+      res.send({
+        success: false,
+        message: `empleados ${CONST.not_found}`,
+      });
+    }
+  } catch (err) {
+    console.log(
+      `${CONST.error.toUpperCase()}: ${err.message} in empleado_getBySucursal `
+    );
+
+    res.send({
+      success: false,
+      message: err.message,
+    });
   }
 };
