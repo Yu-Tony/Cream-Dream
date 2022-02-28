@@ -8,3 +8,4 @@ exports.request_submitted = "request submitted successfully";
 exports.login = "login successfully";
 exports.singup = "singup successfully";
 exports.invalid_cred = "invalid credentials";
+exports.valid_info = "Please, validate your info";
