@@ -29,7 +29,6 @@ exports.empleado_create = async (req, res) => {
         console.error(
           `${CONST.error.toUpperCase()}: ${err.message} in empleado_create`
         );
-
         res.send({
           success: false,
           message: err.message,

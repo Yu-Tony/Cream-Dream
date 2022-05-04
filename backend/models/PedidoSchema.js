@@ -3,14 +3,17 @@ const mongoose = require("mongoose");
 const PedidoSchema = new mongoose.Schema({
   comidas: [
     {
-      type: mongoose.Types.ObjectId,
-      ref: "comida",
+      comida: { type: mongoose.Types.ObjectId, ref: "comida" },
+      cantidad: { type: Number },
+      opcion: { type: String },
+      ordenado: { type: Boolean },
     },
   ],
   combos: [
     {
-      type: mongoose.Types.ObjectId,
-      ref: "combo",
+      combo: { type: mongoose.Types.ObjectId, ref: "combo" },
+      cantidad: { type: Number },
+      ordenado: { type: Boolean },
     },
   ],
   mesa: {

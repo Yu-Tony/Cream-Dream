@@ -1,4 +1,5 @@
 const Pedido = require("../models/PedidoSchema");
+const CONST = require("../constants");
 const { ValidatePedido } = require("./validation");
 
 exports.pedido_update = async (req, res) => {
@@ -44,14 +45,18 @@ exports.pedido_update = async (req, res) => {
       if (pedidodb) {
         const updated = await Pedido.findByIdAndUpdate(
           id,
-          { $push: { ...body } },
-          { upsert: true, returnOriginal: false }
+          body
+          /*{
+            $push: { comidas: body.comidas },
+            subtotal: body.subtotal,
+          },*/
+          /*{ upsert: true, returnOriginal: false }*/
         );
 
         console.log(`pedido ${CONST.updated_success}`);
         res.send({
           success: true,
-          message: `${updated.nombre} ${CONST.updated_success}`,
+          message: `pedido ${CONST.updated_success}`,
           data: updated,
         });
       } else {
@@ -71,5 +76,42 @@ exports.pedido_update = async (req, res) => {
         message: err.message,
       });
     }
+  }
+};
+
+exports.pedido_getById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    var pedidodb = await Pedido.findById(id);
+
+    if (pedidodb) {
+      console.log(`${CONST.data_found.toUpperCase()} pedido_getById`);
+
+      pedidodb = await pedidodb.populate({
+        path: "comidas",
+        populate: { path: "comida", model: "comida" },
+      });
+
+      res.send({
+        success: true,
+        data: pedidodb,
+      });
+    } else {
+      console.log(`${CONST.not_found.toUpperCase()}: in pedido_getById`);
+      res.send({
+        success: false,
+        message: `pedido ${CONST.not_found}`,
+      });
+    }
+  } catch (err) {
+    console.log(
+      `${CONST.error.toUpperCase()} ${err.message} in pedido_getById`
+    );
+
+    res.send({
+      success: false,
+      message: err.message,
+    });
   }
 };

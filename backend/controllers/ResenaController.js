@@ -10,15 +10,13 @@ exports.resena_create = async (req, res) => {
   //Aqui deberia de ir la validación de la información.
 
   if (result) {
-
     let newResena = new Resena(body); //Con la info del body creo un objeto del tipo escuela, la guardo en la variable.
 
     await newResena //Funciones:
       .save() //Función si ese objeto modelo ya existe, lo actualiza; si es un objeto nuevo, lo inserta.
-      .then((newObject) => 
-      {
+      .then((newObject) => {
         console.log(CONST.created_success, newObject);
-  
+
         res.send({
           success: true,
           message: `${"Reseña"} ${CONST.created_success}`,
@@ -29,23 +27,19 @@ exports.resena_create = async (req, res) => {
         console.error(
           `${CONST.error.toUpperCase()}: ${err.message} in resena_create`
         );
-  
+
         res.send({
           success: false,
           message: err.message,
         });
-  
       });
-  }else {
+  } else {
     console.log(`${CONST.valid_info.toUpperCase()}: in resena_create`);
     res.send({
       success: false,
       message: CONST.valid_info,
     });
   }
-
-
-
 };
 
 exports.resena_delete = async (req, res) => {
@@ -78,15 +72,13 @@ exports.resena_delete = async (req, res) => {
       message: err.message,
     });
   }
-
 };
 
 exports.resena_getByIdAndType = async (req, res) => {
   const { id } = req.params;
   const { t } = req.query;
 
-  try
-  {
+  try {
     const resenadb = await Resena.find({ _id: id, tipo: t });
     if (resenadb) {
       console.log(`${CONST.data_found.toUpperCase()} in resena_getByIdAndType`);
@@ -101,8 +93,7 @@ exports.resena_getByIdAndType = async (req, res) => {
         message: `reseña ${CONST.not_found}`,
       });
     }
-  } catch(err)
-  {
+  } catch (err) {
     console.log(
       `${CONST.error.toUpperCase()}: ${err.message} in resena_getByIdAndType `
     );
@@ -112,5 +103,4 @@ exports.resena_getByIdAndType = async (req, res) => {
       message: err.message,
     });
   }
- 
 };

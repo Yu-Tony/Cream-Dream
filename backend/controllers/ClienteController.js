@@ -1,6 +1,6 @@
 const Cliente = require("../models/ClienteSchema");
 const CONST = require("../constants");
-const { ValidatePersona } = require("./validation");
+const { ValidatePersona, ValidateContrasena } = require("./validation");
 var bcrypt = require("bcrypt");
 
 exports.cliente_signin = async (req, res) => {
@@ -55,6 +55,7 @@ exports.cliente_login = async (req, res) => {
           res.send({
             success: true,
             message: CONST.login,
+            data: { id: clientedb.id },
           });
         } else {
           console.log(`cliente ${correo} ${CONST.invalid_cred}`);
@@ -84,16 +85,18 @@ exports.cliente_update = async (req, res) => {
   const { id } = req.params;
   const { contrasena } = req.body;
 
-  const result = ValidatePersona({ contrasena });
+  const result = ValidateContrasena({ contrasena });
 
   if (result) {
     try {
       const clientedb = await Cliente.findById(id);
 
       if (clientedb) {
-        contrasena = bcrypt.hashSync(contrasena, 10);
+        const contrasenaHashed = bcrypt.hashSync(contrasena, 10);
 
-        const updated = await Cliente.findByIdAndUpdate(id, { contrasena });
+        const updated = await Cliente.findByIdAndUpdate(id, {
+          contrasena: contrasenaHashed,
+        });
 
         console.log(`cliente ${clientedb.nombre} ${CONST.updated_success}`);
         res.send({

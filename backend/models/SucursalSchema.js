@@ -12,10 +12,10 @@ const SucursalSchema = new mongoose.Schema({
   telefono: {
     type: String,
   },
-  imagen: [
+  imagenes: [
     {
-      data: Buffer,
-      contentType: String,
+      type: String,
+      require: true,
     },
   ],
   calificacion: [

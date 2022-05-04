@@ -8,5 +8,6 @@ router.get("/comida/:id", comida_controller.comida_getById);
 router.get("/comida", comida_controller.comida_getByQuery);
 router.post("/comida", comida_controller.comida_create);
 router.put("/comida/:id", comida_controller.comida_update);
+router.post("/comida/image", comida_controller.comida_image);
 
 module.exports = router;

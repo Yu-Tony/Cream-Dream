@@ -1,14 +1,25 @@
+const { ref, uploadBytes, getDownloadURL } = require("firebase/storage");
+const { Storage } = require("../firebase/Storage");
+
 const Comida = require("../models/ComidaSchema");
 const CONST = require("../constants");
 const { ValidateComida } = require("./validation");
+const { comidaBodyParse, uploadImages } = require("../utils");
 
 exports.comida_create = async (req, res) => {
-  const { body } = req;
+  const { body, files } = req;
 
-  const result = ValidateComida(body);
+  const bodyaux = comidaBodyParse(body);
+  const result = ValidateComida(bodyaux);
 
   if (result) {
-    let newComida = new Comida(body);
+    let newComida = new Comida(bodyaux);
+    const urls = await uploadImages(
+      files.imagenes,
+      "productos",
+      newComida.nombre
+    );
+    newComida.imagenes = [...urls];
 
     await newComida
       .save()
@@ -44,7 +55,8 @@ exports.comida_update = async (req, res) => {
   const { id } = req.params;
   const { body } = req;
 
-  const result = ValidateComida(body);
+  const bodyaux = comidaBodyParse(body);
+  const result = ValidateComida(bodyaux);
 
   if (result) {
     try {
@@ -52,7 +64,7 @@ exports.comida_update = async (req, res) => {
 
       if (comidadb) {
         //FOUNDED
-        const updated = await Comida.findByIdAndUpdate(id, body, {
+        const updated = await Comida.findByIdAndUpdate(id, bodyaux, {
           returnOriginal: false,
         });
 
@@ -91,7 +103,12 @@ exports.comida_update = async (req, res) => {
 };
 
 exports.comida_getall_menu = async (req, res) => {
-  const data = await Comida.find();
+  const data = await Comida.find({}).select({
+    nombre: 1,
+    descripcion: 1,
+    "precio.porcion": 1,
+    imagen: { $first: "$imagenes" },
+  });
 
   console.log(`${CONST.data_found.toUpperCase()} comida_getall_menu`);
   res.send({
@@ -105,7 +122,12 @@ exports.comida_getById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const comidadb = await Comida.findById(id);
+    const comidadb = await Comida.findById(id).select({
+      nombre: 1,
+      descripcion: 1,
+      precio: 1,
+      imagenes: 1,
+    });
     if (comidadb) {
       console.log(`${CONST.data_found.toUpperCase()} comida_getById`);
 
@@ -133,6 +155,7 @@ exports.comida_getById = async (req, res) => {
 };
 
 exports.comida_getByQuery = async (req, res) => {
+  //Nombre, Categoria
   const { n, c } = req.query;
 
   let query = "";
@@ -143,14 +166,24 @@ exports.comida_getByQuery = async (req, res) => {
   var comidadb = null;
 
   if (n) {
-    comidadb = await Comida.findOne({ nombre: query });
+    comidadb = await Comida.findOne({ nombre: query }).select({
+      nombre: 1,
+      descripcion: 1,
+      "precio.porcion": 1,
+      imagen: { $first: "$imagenes" },
+    });
   }
 
   if (c) {
-    comidadb = await Comida.find({ categoria: query });
+    comidadb = await Comida.find({ categoria: query }).select({
+      nombre: 1,
+      descripcion: 1,
+      "precio.porcion": 1,
+      imagen: { $first: "$imagenes" },
+    });
   }
 
-  if (comidadb && comidadb.length > 0) {
+  if (comidadb || comidadb.length > 0) {
     console.log(`${CONST.data_found.toUpperCase()} comida_getByQuery`);
     res.send({
       success: true,
@@ -165,4 +198,47 @@ exports.comida_getByQuery = async (req, res) => {
       message: `comida_getByQuery("${n ? n : c}") ${CONST.not_found}`,
     });
   }
+};
+
+exports.comida_image = async (req, res) => {
+  //const files = { ...req.files };
+  const array = await uploadImage("cafe", req.files);
+
+  console.log({
+    files: array,
+  });
+  res.send({
+    files: array,
+  });
+
+  /*const image1 = req.files.image1;
+  const image2 = req.files.image2;
+
+  console.log({
+    image1: image1.name,
+    image2: image2.name,
+    body: req.body,
+  });
+  res.send({
+    image1: image1.name,
+    image2: image2.name,
+    body: req.body,
+  });*/
+  /*const comidaRef = ref(Storage, "comidas/image.jpg");
+  uploadBytes(comidaRef, image1.data, {
+    contentType: image1.mimetype,
+  })
+    .then(() => {
+      console.log("Uploaded a blob or file!");
+
+      res.send({
+        success: true,
+      });
+    })
+    .catch((error) => {
+      console.log(err);
+      res.send({
+        error,
+      });
+    });*/
 };

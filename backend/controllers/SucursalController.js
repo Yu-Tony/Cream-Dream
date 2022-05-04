@@ -1,42 +1,49 @@
 const Sucursal = require("../models/SucursalSchema");
 const CONST = require("../constants");
 const { ValidateSucursal } = require("./validation");
+const { sucursalBodyParse, uploadImages } = require("../utils");
 
 exports.sucursal_create = async (req, res) => {
-  const { body } = req;
-  
-  const result = ValidateSucursal(body);
+  const { body, files } = req;
+
+  const bodyaux = sucursalBodyParse(body);
+  const result = ValidateSucursal(bodyaux);
 
   if (result) {
-    let newSucursal = new Sucursal(body);
+    let newSucursal = new Sucursal(bodyaux);
+    const urls = await uploadImages(
+      files.imagenes,
+      "sucursal",
+      newSucursal.nombre
+    );
+    newSucursal.imagenes = [...urls];
+
     await newSucursal
-    .save()
-    .then((newObject) => {
-      console.log(`${CONST.created_success}`, newObject);
-      res.send({
-        success: true,
-        message: `${newObject.nombre} ${CONST.created_success}`,
-        data: newObject,
+      .save()
+      .then((newObject) => {
+        console.log(`${CONST.created_success}`, newObject);
+        res.send({
+          success: true,
+          message: `${newObject.nombre} ${CONST.created_success}`,
+          data: newObject,
+        });
+      })
+      .catch((err) => {
+        console.error(
+          `${CONST.error.toUpperCase()}: ${err.message} in sucursal_create`
+        );
+        res.send({
+          success: false,
+          message: err.message,
+        });
       });
-    })
-    .catch((err) => {
-      console.error(
-        `${CONST.error.toUpperCase()}: ${err.message} in sucursal_create`
-      );
-      res.send({
-        success: false,
-        message: err.message,
-      });
-    });
-  }else {
+  } else {
     console.log(`${CONST.valid_info.toUpperCase()}: in sucursal_create`);
     res.send({
       success: false,
       message: CONST.valid_info,
     });
   }
-
- 
 };
 
 exports.sucursal_delete = async (req, res) => {
@@ -47,7 +54,7 @@ exports.sucursal_delete = async (req, res) => {
     const sucursaldb = await Sucursal.findById(id);
 
     if (sucursaldb) {
-      const data = await Sucursal.findOneAndUpdate({ _id: id }, body, {
+      const data = await Sucursal.findByIdAndUpdate(id, body, {
         returnOriginal: false,
       });
       console.log(`${sucursaldb.nombre} ${CONST.updated_success}`);
@@ -91,7 +98,7 @@ exports.sucursal_getById = async (req, res) => {
   try {
     const sucursaldb = await Sucursal.findById(id);
 
-    if (data) {
+    if (sucursaldb) {
       console.log(`${CONST.data_found.toUpperCase()} sucursal_getById`);
 
       res.send({

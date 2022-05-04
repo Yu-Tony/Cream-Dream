@@ -9,7 +9,7 @@ const EmpleadoSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  sucursal: {
+  _sucursal: {
     type: mongoose.Schema.Types.ObjectId,
   },
   correo: {

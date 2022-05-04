@@ -14,8 +14,7 @@ exports.reservacion_create = async (req, res) => {
 
     await newReservacion //Funciones:
       .save() //Función si ese objeto modelo ya existe, lo actualiza; si es un objeto nuevo, lo inserta.
-      .then((newObject) => 
-      {
+      .then((newObject) => {
         console.log(CONST.created_success, newObject);
 
         res.send({
@@ -25,7 +24,6 @@ exports.reservacion_create = async (req, res) => {
         });
       })
       .catch((err) => {
-        
         console.error(
           `${CONST.error.toUpperCase()}: ${err.message} in reservacion_create`
         );
@@ -34,17 +32,14 @@ exports.reservacion_create = async (req, res) => {
           success: false,
           message: err.message,
         });
-
       });
-  }
-  else {
+  } else {
     console.log(`${CONST.valid_info.toUpperCase()}: in reservacion_create`);
     res.send({
       success: false,
       message: CONST.valid_info,
     });
   }
-
 };
 
 exports.reservacion_delete = async (req, res) => {
@@ -68,9 +63,7 @@ exports.reservacion_delete = async (req, res) => {
         message: `reservación ${CONST.not_found}`,
       });
     }
-
-  }catch(err)
-  {
+  } catch (err) {
     console.error(
       `${CONST.error.toUpperCase()}: ${err.message} in reservacion_delete`
     );
@@ -87,7 +80,7 @@ exports.reservacion_getById = async (req, res) => {
   try {
     const reservaciondb = await Reservacion.findById(id);
     if (reservaciondb) {
-      console.log(`${CONST.data_found.toUpperCase()} inreservacion_getById`);
+      console.log(`${CONST.data_found.toUpperCase()} in reservacion_getById`);
 
       res.send({
         success: true,
@@ -100,9 +93,7 @@ exports.reservacion_getById = async (req, res) => {
         message: `reservación ${CONST.not_found}`,
       });
     }
-
-  }catch(err)
-  {
+  } catch (err) {
     console.log(
       `${CONST.error.toUpperCase()}: ${err.message} in reservacion_getById `
     );
@@ -118,25 +109,30 @@ exports.reservacion_getByPeopleDateSucursal = async (req, res) => {
   const { p, f, s } = req.query;
 
   try {
-    const reservaciondb = await Mesa.find({ sillas: p, sucursal: s,});
+    const reservaciondb = await Mesa.find({ sillas: p, sucursal: s });
     if (reservaciondb) {
-      console.log(`${CONST.data_found.toUpperCase()} reservacion_getByPeopleDateSucursal`);
+      console.log(
+        `${CONST.data_found.toUpperCase()} reservacion_getByPeopleDateSucursal`
+      );
 
       res.send({
         success: true,
         data: reservaciondb,
       });
     } else {
-      console.log(`${CONST.not_found.toUpperCase()}: in reservacion_getByPeopleDateSucursal`);
+      console.log(
+        `${CONST.not_found.toUpperCase()}: in reservacion_getByPeopleDateSucursal`
+      );
       res.send({
         success: false,
         message: `Reservacion ${CONST.not_found}`,
       });
     }
-  }catch(err)
-  {
+  } catch (err) {
     console.log(
-      `${CONST.error.toUpperCase()}: ${err.message} in reservacion_getByPeopleDateSucursal `
+      `${CONST.error.toUpperCase()}: ${
+        err.message
+      } in reservacion_getByPeopleDateSucursal `
     );
 
     res.send({

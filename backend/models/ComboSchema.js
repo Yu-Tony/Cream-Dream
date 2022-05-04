@@ -9,7 +9,7 @@ const ComboSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  comidas: [
+  _comidas: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "comida",

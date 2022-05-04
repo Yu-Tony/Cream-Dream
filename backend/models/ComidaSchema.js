@@ -24,6 +24,12 @@ const comidaSchema = new mongoose.Schema({
       required: true,
     },
   ],
+  imagenes: [
+    {
+      type: String,
+      require: true,
+    },
+  ],
   baja: {
     type: Boolean,
     required: true,

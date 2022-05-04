@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const ReservacionSchema = new mongoose.Schema({
-  mesa: {
+  _mesa: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "mesa",
   },

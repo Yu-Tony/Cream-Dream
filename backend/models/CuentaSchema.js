@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const CuentaSchema = new mongoose.Schema({
-  pedido: {
+  _pedido: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "pedido",
   },
