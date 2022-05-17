@@ -166,10 +166,10 @@ exports.comida_getByQuery = async (req, res) => {
   var comidadb = null;
 
   if (n) {
-    comidadb = await Comida.findOne({ nombre: query }).select({
+    comidadb = await Comida.find({ nombre: query }).select({
       nombre: 1,
       descripcion: 1,
-      "precio.porcion": 1,
+      precio: 1,
       imagen: { $first: "$imagenes" },
     });
   }
@@ -183,7 +183,7 @@ exports.comida_getByQuery = async (req, res) => {
     });
   }
 
-  if (comidadb || comidadb.length > 0) {
+  if (comidadb && comidadb.length > 0) {
     console.log(`${CONST.data_found.toUpperCase()} comida_getByQuery`);
     res.send({
       success: true,

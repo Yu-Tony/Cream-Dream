@@ -9,6 +9,10 @@ const SucursalSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  direccion_corta: {
+    type: String,
+    required: true,
+  },
   telefono: {
     type: String,
   },

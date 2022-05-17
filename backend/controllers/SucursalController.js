@@ -83,7 +83,11 @@ exports.sucursal_delete = async (req, res) => {
 };
 
 exports.sucursal_getall = async (req, res) => {
-  const data = await Sucursal.find();
+  const data = await Sucursal.find().select({
+    nombre: 1,
+    imagenes: 1,
+    direccion_corta: 1,
+  });
   console.log(`${CONST.data_found.toUpperCase()} sucursal_getall`);
   res.send({
     success: true,

@@ -159,3 +159,39 @@ exports.cliente_delete = async (req, res) => {
     });
   }
 };
+
+exports.cliente_getById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const clientedb = await Cliente.findById(id).select({
+      correo: 1,
+      nombre: 1,
+      apellido: 1,
+    });
+
+    if (clientedb) {
+      console.log(`${CONST.data_found.toUpperCase()} cliente_getById`);
+
+      res.send({
+        success: true,
+        data: clientedb,
+      });
+    } else {
+      console.log(`${CONST.not_found.toUpperCase()}: in cliente_getById`);
+      res.send({
+        success: false,
+        message: `cliente ${CONST.not_found}`,
+      });
+    }
+  } catch (err) {
+    console.error(
+      `${CONST.error.toUpperCase()}: ${err.message} in cliente_getById`
+    );
+
+    res.send({
+      success: false,
+      message: err.message,
+    });
+  }
+};

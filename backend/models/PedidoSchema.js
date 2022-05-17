@@ -21,9 +21,10 @@ const PedidoSchema = new mongoose.Schema({
     ref: "mesa",
     required: true,
   },
-  subtotal: {
-    type: Number,
-    required: true,
+  cliente: {
+    type: mongoose.Types.ObjectId,
+    ref: "cliente",
+    requires: true,
   },
 });
 
