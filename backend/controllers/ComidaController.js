@@ -103,11 +103,14 @@ exports.comida_update = async (req, res) => {
 };
 
 exports.comida_getall_menu = async (req, res) => {
-  const data = await Comida.find({}).select({
+  const { categoria } = req.query;
+
+  const data = await Comida.find({ categoria: categoria }).select({
     nombre: 1,
     descripcion: 1,
-    "precio.porcion": 1,
+    precio: 1,
     imagen: { $first: "$imagenes" },
+    categoria: 1,
   });
 
   console.log(`${CONST.data_found.toUpperCase()} comida_getall_menu`);
