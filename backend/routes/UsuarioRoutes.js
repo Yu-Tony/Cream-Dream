@@ -8,6 +8,6 @@ router.post("/usuario/validacion", usuario_controller.usuario_login);
 router.put("/usuario/:id", usuario_controller.usuario_update);
 router.delete("/usuario/:id", usuario_controller.usuario_delete);
 router.get("/usuario/:id", usuario_controller.usuario_getById);
-router.get("/empleado", usuario_controller.usuario_getBySucursal);
+router.get("/usuario_empleado", usuario_controller.usuario_getBySucursal);
 
 module.exports = router;

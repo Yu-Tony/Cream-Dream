@@ -7,7 +7,7 @@ exports.pedido_update = async (req, res) => {
   const { body } = req;
 
   if (id == 0) {
-    const result = ValidatePedido(body);
+    const result = true; //ValidatePedido(body);
 
     if (result) {
       let newPedido = new Pedido(body);
@@ -45,12 +45,11 @@ exports.pedido_update = async (req, res) => {
       if (pedidodb) {
         const updated = await Pedido.findByIdAndUpdate(
           id,
-          body
-          /*{
+          {
             $push: { comidas: body.comidas },
             subtotal: body.subtotal,
-          },*/
-          /*{ upsert: true, returnOriginal: false }*/
+          },
+          { upsert: true, returnOriginal: false }
         );
 
         console.log(`pedido ${CONST.updated_success}`);
