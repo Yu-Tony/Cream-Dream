@@ -163,7 +163,7 @@ exports.empleado_getBySucursal = async (req, res) => {
   const { s } = req.query;
 
   try {
-    const empleadodb = await Empleado.find({ Sucursal: s });
+    const empleadodb = await Empleado.find({ _sucursal: s });
 
     if (empleadodb) {
       console.log(`${CONST.data_found.toUpperCase()} empleado_getBySucursal`);

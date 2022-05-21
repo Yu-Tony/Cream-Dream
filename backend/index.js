@@ -21,6 +21,7 @@ const reservacion_router = require("./routes/ReservacionRoutes");
 const combo_router = require("./routes/ComboRoutes");
 const pedido_router = require("./routes/PedidoRoutes");
 const cuenta_router = require("./routes/CuentaRoutes");
+const usuario_router = require("./routes/UsuarioRoutes");
 
 app.use(bodyParser.json());
 
@@ -35,6 +36,7 @@ app.use("/api", reservacion_router);
 app.use("/api", combo_router);
 app.use("/api", pedido_router);
 app.use("/api", cuenta_router);
+app.use("/api", usuario_router);
 
 app.listen(port, () => {
   console.log("La aplicación está escuchando al puerto " + port);
