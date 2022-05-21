@@ -15,7 +15,7 @@ const comidaSchema = new mongoose.Schema({
     required: true,
   },
   precio: {
-    type: Object,
+    type: Number,
     required: true,
   },
   categoria: [
