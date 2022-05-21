@@ -18,12 +18,10 @@ const comidaSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  categoria: [
-    {
-      type: String,
-      required: true,
-    },
-  ],
+  categoria: {
+    type: String,
+    required: true,
+  },
   imagenes: [
     {
       type: String,

@@ -22,6 +22,7 @@ exports.sucursalBodyParse = (body) => {
   const parsedBody = {};
   parsedBody.nombre = JSON.parse(body.nombre);
   parsedBody.direccion = JSON.parse(body.direccion);
+  parsedBody.direccion_corta = JSON.parse(body.direccion_corta);
   parsedBody.telefono = JSON.parse(body.telefono);
   parsedBody.calificacion = JSON.parse(body.calificacion);
   parsedBody.baja = JSON.parse(body.baja);
